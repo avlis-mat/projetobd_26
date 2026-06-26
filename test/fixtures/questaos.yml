@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  Enunciado: MyString
+  Versao: MyString
+  Status: MyString
+  Criado_em: 2026-06-25 19:42:54
+  Atualizado_em: 2026-06-25 19:42:54
+
+two:
+  Enunciado: MyString
+  Versao: MyString
+  Status: MyString
+  Criado_em: 2026-06-25 19:42:54
+  Atualizado_em: 2026-06-25 19:42:54

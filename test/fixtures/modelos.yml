@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  Nome: MyString
+  Descricao: MyString
+  Versao: MyString
+  Status: MyString
+  Criado_em: 2026-06-25 19:57:55
+  Atualizado_em: 2026-06-25 19:57:55
+  idUsuario: 1
+
+two:
+  Nome: MyString
+  Descricao: MyString
+  Versao: MyString
+  Status: MyString
+  Criado_em: 2026-06-25 19:57:55
+  Atualizado_em: 2026-06-25 19:57:55
+  idUsuario: 1

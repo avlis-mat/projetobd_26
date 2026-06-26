@@ -1,0 +1,47 @@
+require "application_system_test_case"
+
+class MateriaTest < ApplicationSystemTestCase
+  setup do
+    @materium = materia(:one)
+  end
+
+  test "visiting the index" do
+    visit materia_url
+    assert_selector "h1", text: "Materia"
+  end
+
+  test "should create materium" do
+    visit materia_url
+    click_on "New materium"
+
+    fill_in "Codigo", with: @materium.Codigo
+    fill_in "Nome", with: @materium.Nome
+    fill_in "Semestre", with: @materium.Semestre
+    fill_in "Iddepartamento", with: @materium.idDepartamento
+    click_on "Create Materium"
+
+    assert_text "Materium was successfully created"
+    click_on "Back"
+  end
+
+  test "should update Materium" do
+    visit materium_url(@materium)
+    click_on "Edit this materium", match: :first
+
+    fill_in "Codigo", with: @materium.Codigo
+    fill_in "Nome", with: @materium.Nome
+    fill_in "Semestre", with: @materium.Semestre
+    fill_in "Iddepartamento", with: @materium.idDepartamento
+    click_on "Update Materium"
+
+    assert_text "Materium was successfully updated"
+    click_on "Back"
+  end
+
+  test "should destroy Materium" do
+    visit materium_url(@materium)
+    click_on "Destroy this materium", match: :first
+
+    assert_text "Materium was successfully destroyed"
+  end
+end

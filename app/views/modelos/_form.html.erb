@@ -1,0 +1,52 @@
+<%= form_with(model: modelo) do |form| %>
+  <% if modelo.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(modelo.errors.count, "error") %> prohibited this modelo from being saved:</h2>
+
+      <ul>
+        <% modelo.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :Nome, style: "display: block" %>
+    <%= form.text_field :Nome %>
+  </div>
+
+  <div>
+    <%= form.label :Descricao, style: "display: block" %>
+    <%= form.text_field :Descricao %>
+  </div>
+
+  <div>
+    <%= form.label :Versao, style: "display: block" %>
+    <%= form.text_field :Versao %>
+  </div>
+
+  <div>
+    <%= form.label :Status, style: "display: block" %>
+    <%= form.text_field :Status %>
+  </div>
+
+  <div>
+    <%= form.label :Criado_em, style: "display: block" %>
+    <%= form.datetime_field :Criado_em %>
+  </div>
+
+  <div>
+    <%= form.label :Atualizado_em, style: "display: block" %>
+    <%= form.datetime_field :Atualizado_em %>
+  </div>
+
+  <div>
+    <%= form.label :idUsuario, style: "display: block" %>
+    <%= form.number_field :idUsuario %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

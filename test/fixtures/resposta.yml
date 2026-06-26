@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  conteudo: MyString
+  respondido_em: 2026-06-25 21:57:05
+  idAluno: 1
+  idFormulario: 1
+  idQuestao: 1
+
+two:
+  conteudo: MyString
+  respondido_em: 2026-06-25 21:57:05
+  idAluno: 1
+  idFormulario: 1
+  idQuestao: 1

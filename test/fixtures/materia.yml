@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  Nome: MyString
+  Codigo: MyString
+  Semestre: MyString
+  idDepartamento: 1
+
+two:
+  Nome: MyString
+  Codigo: MyString
+  Semestre: MyString
+  idDepartamento: 1
