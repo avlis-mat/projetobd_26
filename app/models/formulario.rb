@@ -5,6 +5,6 @@ class Formulario < ApplicationRecord
     belongs_to :turma, foreign_key: "idTurma", class_name: "Turma"
     belongs_to :modelo, foreign_key: "idModelo", class_name: "Modelo"
 
-    has_many :respostas, foreign_key: "idFormulario", class_name: "Resposta"
+    has_many :respostas, foreign_key: "idFormulario", class_name: "Respostum"
 
 end
