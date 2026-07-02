@@ -3,7 +3,7 @@ class AlunosController < ApplicationController
 
   # GET /alunos or /alunos.json
   def index
-    @alunos = Aluno.all
+    @alunos = Aluno.includes(:usuario).all
   end
 
   # GET /alunos/1 or /alunos/1.json
@@ -13,58 +13,68 @@ class AlunosController < ApplicationController
   # GET /alunos/new
   def new
     @aluno = Aluno.new
+    @usuario - Usuario.new
   end
 
   # GET /alunos/1/edit
   def edit
+    @usuario = @aluno.usuario
   end
 
-  # POST /alunos or /alunos.json
-  def create
-    @aluno = Aluno.new(aluno_params)
 
-    respond_to do |format|
-      if @aluno.save
-        format.html { redirect_to @aluno, notice: "Aluno was successfully created." }
-        format.json { render :show, status: :created, location: @aluno }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @aluno.errors, status: :unprocessable_content }
-      end
+  def create
+    ActiveRecord::Base.transaction do
+      @usuario = Usuario.new(usuario_params)
+      @usuario.save!
+
+      @aluno = Aluno.new(aluno_params)
+      @aluno.idusuario = @usuario.id
+      @aluno.save!
     end
+
+    redirect_to alunos_path, notice: "Aluno criado com sucesso!"
+    rescue ActiveRecord::RecordInvalid => e
+    @usuario ||= Usuario.new
+    flash.now[:alert] = "Erro ao criar aluno: #{e.message}"
+    render :new, status: :unprocessable_entity
   end
 
   # PATCH/PUT /alunos/1 or /alunos/1.json
   def update
-    respond_to do |format|
-      if @aluno.update(aluno_params)
-        format.html { redirect_to @aluno, notice: "Aluno was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @aluno }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @aluno.errors, status: :unprocessable_content }
-      end
+    ActiveRecord::Base.transaction do
+      @aluno.usuario.update!(usuario_params)
+      @aluno.update!(aluno_params)
     end
+
+    redirect_to alunos_path, notice: "Aluno atualizado com sucesso!"
+    rescue ActiveRecord::RecordInvalid => e
+    flash.now[:alert] = "Erro ao atualizar: #{e.message}"
+    render :edit, status: :unprocessable_entity
   end
 
-  # DELETE /alunos/1 or /alunos/1.json
-  def destroy
-    @aluno.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to alunos_path, notice: "Aluno was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+  def destroy
+    ActiveRecord::Base.transaction do
+      usuario = @aluno.usuario
+      @aluno.destroy!
+      usuario.destroy!
     end
+
+    redirect_to alunos_path, notice: "Aluno removido com sucesso!"
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_aluno
-      @aluno = Aluno.find(params.expect(:id))
-    end
+    
+  def set_aluno
+    @aluno = Aluno.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def aluno_params
-      params.expect(aluno: [ :idUsuario, :Matricula, :Tipo_graduacao, :Semestre ])
-    end
+  def usuario_params
+    params.require(:usuario).permit(:nome, :email, :senha, :status, :iddepartamento)
+  end
+
+  def aluno_params
+    params.require(:aluno).permit(:matricula, :tipo_graduacao, :semestre)
+  end
+
 end
