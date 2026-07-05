@@ -1,37 +1,44 @@
-<%= form_with(model: aluno) do |form| %>
-  <% if aluno.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(aluno.errors.count, "error") %> prohibited this aluno from being saved:</h2>
-
-      <ul>
-        <% aluno.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :idUsuario, style: "display: block" %>
-    <%= form.number_field :idUsuario %>
+<%= form_with model: aluno, url: aluno.new_record? ? alunos_path : aluno_path(aluno) do |f| %>
+  <h2>Dados do Usuário</h2>
+  <div class="form-group">
+    <label>Nome</label>
+    <input type="text" name="nome" value="<%= aluno.usuario&.nome %>">
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" name="email" value="<%= aluno.usuario&.email %>">
+  </div>
+  <div class="form-group">
+    <label>Senha</label>
+    <input type="password" name="senha">
+  </div>
+  <div class="form-group">
+    <label>Departamento</label>
+    <select name="iddepartamento">
+      <option value="">Selecione</option>
+      <% Departamento.all.each do |d| %>
+        <option value="<%= d.codigo %>"
+          <%= "selected" if aluno.usuario&.iddepartamento == d.codigo %>>
+          <%= d.nome %>
+        </option>
+      <% end %>
+    </select>
   </div>
 
-  <div>
-    <%= form.label :Matricula, style: "display: block" %>
-    <%= form.text_field :Matricula %>
+  <h2 style="margin-top: 16px;">Dados do Aluno</h2>
+  <div class="form-group">
+    <%= f.label :matricula, "Matrícula" %>
+    <%= f.text_field :matricula %>
+  </div>
+  <div class="form-group">
+    <%= f.label :tipo_graduacao, "Tipo de Graduação" %>
+    <%= f.select :tipo_graduacao, ["Licenciatura", "Bacharelado"], { prompt: "Selecione" } %>
+  </div>
+  <div class="form-group">
+    <%= f.label :semestre, "Semestre" %>
+    <%= f.text_field :semestre, placeholder: "2026/1" %>
   </div>
 
-  <div>
-    <%= form.label :Tipo_graduacao, style: "display: block" %>
-    <%= form.text_field :Tipo_graduacao %>
-  </div>
-
-  <div>
-    <%= form.label :Semestre, style: "display: block" %>
-    <%= form.text_field :Semestre %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", alunos_path, class: "btn btn-secondary" %>
 <% end %>

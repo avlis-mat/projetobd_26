@@ -1,16 +1,25 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Admins" %>
-
-<h1>Admins</h1>
-
-<div id="admins">
-  <% @admins.each do |admin| %>
-    <%= render admin %>
-    <p>
-      <%= link_to "Show this admin", admin %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Administradores</h1>
+  <%= link_to "Novo Admin", new_admin_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New admin", new_admin_path %>
+<table>
+  <thead>
+    <tr><th>Nome</th><th>Email</th><th>Nível de Acesso</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @admins.each do |a| %>
+      <tr>
+        <td><%= a.usuario&.nome %></td>
+        <td><%= a.usuario&.email %></td>
+        <td><%= a.nv_acesso %></td>
+        <td class="actions">
+          <%= link_to "Ver",    admin_path(a), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_admin_path(a), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", admin_path(a),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,11 +1,2 @@
-<% content_for :title, "New questao" %>
-
-<h1>New questao</h1>
-
-<%= render "form", questao: @questao %>
-
-<br>
-
-<div>
-  <%= link_to "Back to questaos", questaos_path %>
-</div>
+<h1>Nova Questão</h1>
+<div class="card"><%= render "form", questao: @questao %></div>

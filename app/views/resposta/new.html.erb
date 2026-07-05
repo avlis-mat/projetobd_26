@@ -1,11 +1,2 @@
-<% content_for :title, "New respostum" %>
-
-<h1>New respostum</h1>
-
-<%= render "form", respostum: @respostum %>
-
-<br>
-
-<div>
-  <%= link_to "Back to resposta", resposta_path %>
-</div>
+<h1>Nova Resposta</h1>
+<div class="card"><%= render "form", respostum: @respostum %></div>

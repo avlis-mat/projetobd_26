@@ -1,4 +1,18 @@
 Rails.application.routes.draw do
+  get "painel/index"
+
+  # Login
+  get "/login", to: "sessions#new", as: "login"
+  post "/login", to: "sessions#create"
+  delete "/logout", to: "sessions#destroy", as: "logout"
+
+  resources :painel, only: [:index] do
+    collection do
+      post :executar_procedure
+    end
+  end
+
+  # Recursos principais
   resources :resposta
   resources :admins
   resources :professors
@@ -21,5 +35,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "painel#index"
 end

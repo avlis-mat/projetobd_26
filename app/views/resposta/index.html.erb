@@ -1,16 +1,27 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Resposta" %>
-
-<h1>Resposta</h1>
-
-<div id="resposta">
-  <% @resposta.each do |respostum| %>
-    <%= render respostum %>
-    <p>
-      <%= link_to "Show this respostum", respostum %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Respostas</h1>
+  <%= link_to "Nova Resposta", new_respostum_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New respostum", new_respostum_path %>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Aluno</th><th>Formulário</th><th>Questão</th><th>Respondido em</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @resposta.each do |r| %>
+      <tr>
+        <td><%= r.id %></td>
+        <td><%= r.aluno&.usuario&.nome %></td>
+        <td><%= r.formulario&.titulo %></td>
+        <td><%= truncate(r.questao&.enunciado, length: 40) %></td>
+        <td><%= r.respondido_em&.strftime("%d/%m/%Y %H:%M") %></td>
+        <td class="actions">
+          <%= link_to "Ver",    respostum_path(r), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_respostum_path(r), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", respostum_path(r),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

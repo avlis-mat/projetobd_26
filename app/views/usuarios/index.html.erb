@@ -1,16 +1,35 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Usuarios" %>
-
-<h1>Usuarios</h1>
-
-<div id="usuarios">
-  <% @usuarios.each do |usuario| %>
-    <%= render usuario %>
-    <p>
-      <%= link_to "Show this usuario", usuario %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Usuários</h1>
+  <%= link_to "Novo Usuário", new_usuario_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New usuario", new_usuario_path %>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Nome</th><th>Email</th><th>Status</th><th>Tipo</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @usuarios.each do |u| %>
+      <tr>
+        <td><%= u.id %></td>
+        <td><%= u.nome %></td>
+        <td><%= u.email %></td>
+        <td><%= u.status %></td>
+        <td>
+          <% if u.admin %>
+            <span style="color:#e74c3c">Admin</span>
+          <% elsif u.professor %>
+            <span style="color:#2980b9">Professor</span>
+          <% elsif u.aluno %>
+            <span style="color:#27ae60">Aluno</span>
+          <% end %>
+        </td>
+        <td class="actions">
+          <%= link_to "Ver",    usuario_path(u),      class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_usuario_path(u), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", usuario_path(u),
+              data: { turbo_method: :delete, turbo_confirm: "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

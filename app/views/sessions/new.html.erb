@@ -1,0 +1,16 @@
+<div style="max-width:400px; margin: 60px auto;">
+  <div class="card">
+    <h2 style="text-align:center; margin-bottom:24px;"> Login</h2>
+    <%= form_with url: login_path do |f| %>
+      <div class="form-group">
+        <%= f.label :email, "Email" %>
+        <%= f.email_field :email, placeholder: "seu@email.com", required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :senha, "Senha" %>
+        <%= f.password_field :senha, placeholder: "••••••", required: true %>
+      </div>
+      <%= f.submit "Entrar", class: "btn btn-primary", style: "width:100%; padding:10px;" %>
+    <% end %>
+  </div>
+</div>

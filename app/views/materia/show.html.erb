@@ -1,10 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @materium %>
-
-<div>
-  <%= link_to "Edit this materium", edit_materium_path(@materium) %> |
-  <%= link_to "Back to materia", materia_path %>
-
-  <%= button_to "Destroy this materium", @materium, method: :delete %>
+<div class="page-header">
+  <h1><%= @materium.nome %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_materium_path(@materium), class: "btn btn-primary" %>
+    <%= link_to "Voltar", materia_path, class: "btn btn-secondary" %>
+  </div>
 </div>
+<div class="card"><%= render @materium %></div>

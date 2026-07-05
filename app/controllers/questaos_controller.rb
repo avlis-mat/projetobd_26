@@ -25,7 +25,7 @@ class QuestaosController < ApplicationController
 
     respond_to do |format|
       if @questao.save
-        format.html { redirect_to @questao, notice: "Questao was successfully created." }
+        format.html { redirect_to @questao, notice: "Questao criada como sucesso!" }
         format.json { render :show, status: :created, location: @questao }
       else
         format.html { render :new, status: :unprocessable_content }
@@ -38,7 +38,7 @@ class QuestaosController < ApplicationController
   def update
     respond_to do |format|
       if @questao.update(questao_params)
-        format.html { redirect_to @questao, notice: "Questao was successfully updated.", status: :see_other }
+        format.html { redirect_to @questao, notice: "Questao atualizada com sucesso!", status: :see_other }
         format.json { render :show, status: :ok, location: @questao }
       else
         format.html { render :edit, status: :unprocessable_content }
@@ -52,7 +52,7 @@ class QuestaosController < ApplicationController
     @questao.destroy!
 
     respond_to do |format|
-      format.html { redirect_to questaos_path, notice: "Questao was successfully destroyed.", status: :see_other }
+      format.html { redirect_to questaos_path, notice: "Questao removida com sucesso!", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -65,6 +65,6 @@ class QuestaosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def questao_params
-      params.expect(questao: [ :Enunciado, :Versao, :Status, :Criado_em, :Atualizado_em ])
+      params.expect(questao: [ :enunciado, :versao, :status, :criado_em, :atualizado_em ])
     end
 end

@@ -1,16 +1,24 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Departamentos" %>
-
-<h1>Departamentos</h1>
-
-<div id="departamentos">
-  <% @departamentos.each do |departamento| %>
-    <%= render departamento %>
-    <p>
-      <%= link_to "Show this departamento", departamento %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Departamentos</h1>
+  <%= link_to "Novo Departamento", new_departamento_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New departamento", new_departamento_path %>
+<table>
+  <thead>
+    <tr><th>Código</th><th>Nome</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @departamentos.each do |d| %>
+      <tr>
+        <td><%= d.codigo %></td>
+        <td><%= d.nome %></td>
+        <td class="actions">
+          <%= link_to "Ver",    departamento_path(d),      class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_departamento_path(d), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", departamento_path(d),
+              data: { turbo_method: :delete, turbo_confirm: "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

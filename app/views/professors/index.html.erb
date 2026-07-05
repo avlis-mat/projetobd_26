@@ -1,16 +1,26 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Professors" %>
-
-<h1>Professors</h1>
-
-<div id="professors">
-  <% @professors.each do |professor| %>
-    <%= render professor %>
-    <p>
-      <%= link_to "Show this professor", professor %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Professores</h1>
+  <%= link_to "Novo Professor", new_professor_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New professor", new_professor_path %>
+<table>
+  <thead>
+    <tr><th>Nome</th><th>Email</th><th>Contratado em</th><th>Turmas</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @professors.each do |p| %>
+      <tr>
+        <td><%= p.usuario&.nome %></td>
+        <td><%= p.usuario&.email %></td>
+        <td><%= p.dt_contratacao&.strftime("%d/%m/%Y") %></td>
+        <td><%= p.turmas.count %></td>
+        <td class="actions">
+          <%= link_to "Ver",    professor_path(p), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_professor_path(p), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", professor_path(p),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

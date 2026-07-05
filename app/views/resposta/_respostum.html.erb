@@ -1,27 +1,5 @@
-<div id="<%= dom_id respostum %>">
-  <p>
-    <strong>Conteudo:</strong>
-    <%= respostum.conteudo %>
-  </p>
-
-  <p>
-    <strong>Respondido em:</strong>
-    <%= respostum.respondido_em %>
-  </p>
-
-  <p>
-    <strong>Idaluno:</strong>
-    <%= respostum.idAluno %>
-  </p>
-
-  <p>
-    <strong>Idformulario:</strong>
-    <%= respostum.idFormulario %>
-  </p>
-
-  <p>
-    <strong>Idquestao:</strong>
-    <%= respostum.idQuestao %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Aluno:</span>        <%= respostum.aluno&.usuario&.nome %></div>
+<div class="detail-row"><span class="detail-label">Formulário:</span>   <%= respostum.formulario&.titulo %></div>
+<div class="detail-row"><span class="detail-label">Questão:</span>      <%= respostum.questao&.enunciado %></div>
+<div class="detail-row"><span class="detail-label">Conteúdo:</span>     <%= respostum.conteudo %></div>
+<div class="detail-row"><span class="detail-label">Respondido em:</span><%= respostum.respondido_em&.strftime("%d/%m/%Y %H:%M") %></div>

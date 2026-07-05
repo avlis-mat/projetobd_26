@@ -1,10 +1,18 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @turma %>
-
-<div>
-  <%= link_to "Edit this turma", edit_turma_path(@turma) %> |
-  <%= link_to "Back to turmas", turmas_path %>
-
-  <%= button_to "Destroy this turma", @turma, method: :delete %>
+<div class="page-header">
+  <h1>Turma #<%= @turma.id %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_turma_path(@turma), class: "btn btn-primary" %>
+    <%= link_to "Voltar", turmas_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+<div class="card">
+  <%= render @turma %>
+  <h2 style="margin-top:20px;">Professores</h2>
+  <% @professors.each do |p| %>
+    <p><%= p.usuario&.nome %></p>
+  <% end %>
+  <h2 style="margin-top:20px;">Alunos</h2>
+  <% @alunos.each do |a| %>
+    <p><%= a.usuario&.nome %></p>
+  <% end %>
 </div>

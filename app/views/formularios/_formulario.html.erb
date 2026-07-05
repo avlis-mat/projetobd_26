@@ -1,52 +1,9 @@
-<div id="<%= dom_id formulario %>">
-  <p>
-    <strong>Titulo:</strong>
-    <%= formulario.titulo %>
-  </p>
-
-  <p>
-    <strong>Status:</strong>
-    <%= formulario.status %>
-  </p>
-
-  <p>
-    <strong>Data inicio:</strong>
-    <%= formulario.data_inicio %>
-  </p>
-
-  <p>
-    <strong>Data fim:</strong>
-    <%= formulario.data_fim %>
-  </p>
-
-  <p>
-    <strong>Criado em:</strong>
-    <%= formulario.criado_em %>
-  </p>
-
-  <p>
-    <strong>Instrucoes:</strong>
-    <%= formulario.instrucoes %>
-  </p>
-
-  <p>
-    <strong>Destinatario:</strong>
-    <%= formulario.destinatario %>
-  </p>
-
-  <p>
-    <strong>Idusuario:</strong>
-    <%= formulario.idUsuario %>
-  </p>
-
-  <p>
-    <strong>Idturma:</strong>
-    <%= formulario.idTurma %>
-  </p>
-
-  <p>
-    <strong>Idmodelo:</strong>
-    <%= formulario.idModelo %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Título:</span>       <%= formulario.titulo %></div>
+<div class="detail-row"><span class="detail-label">Status:</span>       <%= formulario.status %></div>
+<div class="detail-row"><span class="detail-label">Turma:</span>        <%= formulario.turma&.codigo %></div>
+<div class="detail-row"><span class="detail-label">Modelo:</span>       <%= formulario.modelo&.nome %></div>
+<div class="detail-row"><span class="detail-label">Criado por:</span>   <%= formulario.usuario&.nome %></div>
+<div class="detail-row"><span class="detail-label">Instruções:</span>   <%= formulario.instrucoes %></div>
+<div class="detail-row"><span class="detail-label">Destinatário:</span> <%= formulario.destinatario %></div>
+<div class="detail-row"><span class="detail-label">Início:</span>       <%= formulario.data_inicio&.strftime("%d/%m/%Y") %></div>
+<div class="detail-row"><span class="detail-label">Fim:</span>          <%= formulario.data_fim&.strftime("%d/%m/%Y") %></div>

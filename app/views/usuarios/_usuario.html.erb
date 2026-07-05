@@ -1,27 +1,4 @@
-<div id="<%= dom_id usuario %>">
-  <p>
-    <strong>Nome:</strong>
-    <%= usuario.Nome %>
-  </p>
-
-  <p>
-    <strong>Email:</strong>
-    <%= usuario.Email %>
-  </p>
-
-  <p>
-    <strong>Senha:</strong>
-    <%= usuario.Senha %>
-  </p>
-
-  <p>
-    <strong>Status:</strong>
-    <%= usuario.Status %>
-  </p>
-
-  <p>
-    <strong>Iddepartamento:</strong>
-    <%= usuario.idDepartamento %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Nome:</span>         <%= usuario.nome %></div>
+<div class="detail-row"><span class="detail-label">Email:</span>        <%= usuario.email %></div>
+<div class="detail-row"><span class="detail-label">Status:</span>       <%= usuario.status %></div>
+<div class="detail-row"><span class="detail-label">Departamento:</span> <%= usuario.departamento&.nome %></div>

@@ -1,70 +1,80 @@
 class ProfessorsController < ApplicationController
   before_action :set_professor, only: %i[ show edit update destroy ]
 
-  # GET /professors or /professors.json
+  
   def index
-    @professors = Professor.all
+    @professors = Professor.includes(:usuario).all
   end
 
-  # GET /professors/1 or /professors/1.json
+  
   def show
   end
 
   # GET /professors/new
   def new
     @professor = Professor.new
+    @usuario = Usuario.new
   end
 
   # GET /professors/1/edit
   def edit
+    @usuario = @professor.usuario
   end
 
   # POST /professors or /professors.json
   def create
-    @professor = Professor.new(professor_params)
+    ActiveRecord::Base.transaction do
+      @usuario = Usuario.new(usuario_params)
+      @usuario.save!
 
-    respond_to do |format|
-      if @professor.save
-        format.html { redirect_to @professor, notice: "Professor was successfully created." }
-        format.json { render :show, status: :created, location: @professor }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @professor.errors, status: :unprocessable_content }
-      end
+      @professor = Professor.new(professor_params)
+      @professor.idusuario = @usuario.id
+      @professor.save!
     end
+
+    redirect_to professors_path, notice: "Professor criado com sucesso!"
+  rescue ActiveRecord::RecordInvalid => e
+    @usuario ||= Usuario.new
+    flash.now[:alert] = "Erro ao criar professor: #{e.message}"
+    render :new, status: :unprocessable_entity
   end
 
-  # PATCH/PUT /professors/1 or /professors/1.json
+  
   def update
-    respond_to do |format|
-      if @professor.update(professor_params)
-        format.html { redirect_to @professor, notice: "Professor was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @professor }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @professor.errors, status: :unprocessable_content }
-      end
+    ActiveRecord::Base.transaction do
+      @professor.usuario.update!(usuario_params)
+      @professor.update!(professor_params)
     end
+
+    redirect_to professors_path, notice: "Professor atualizado com sucesso!"
+    rescue ActiveRecord::RecordInvalid => e
+    flash.now[:alert] = "Erro ao atualizar: #{e.message}"
+    render :edit, status: :unprocessable_entity
   end
 
   # DELETE /professors/1 or /professors/1.json
   def destroy
-    @professor.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to professors_path, notice: "Professor was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+    ActiveRecord::Base.transaction do
+      usuario = @professor.usuario
+      @professor.destroy!
+      usuario.destroy!
     end
+
+    redirect_to professors_path, notice: "Professor removido com sucesso!"
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_professor
-      @professor = Professor.find(params.expect(:id))
+      @professor = Professor.find(params[:id])
+    end
+
+    def usuario_params
+      params.require(:usuario).permit(:nome, :email, :senha, :status, :iddepartamento)
     end
 
     # Only allow a list of trusted parameters through.
     def professor_params
-      params.expect(professor: [ :idUsuario, :dt_contratacao ])
+      params.require(:professor).permit(:dt_contratacao)
     end
 end

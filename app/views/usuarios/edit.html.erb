@@ -1,12 +1,2 @@
-<% content_for :title, "Editing usuario" %>
-
-<h1>Editing usuario</h1>
-
-<%= render "form", usuario: @usuario %>
-
-<br>
-
-<div>
-  <%= link_to "Show this usuario", @usuario %> |
-  <%= link_to "Back to usuarios", usuarios_path %>
-</div>
+<h1>Editar Usuário</h1>
+<div class="card"><%= render "form", usuario: @usuario %></div>

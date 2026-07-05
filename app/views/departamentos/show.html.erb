@@ -1,10 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @departamento %>
-
-<div>
-  <%= link_to "Edit this departamento", edit_departamento_path(@departamento) %> |
-  <%= link_to "Back to departamentos", departamentos_path %>
-
-  <%= button_to "Destroy this departamento", @departamento, method: :delete %>
+<div class="page-header">
+  <h1><%= @departamento.nome %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_departamento_path(@departamento), class: "btn btn-primary" %>
+    <%= link_to "Voltar", departamentos_path, class: "btn btn-secondary" %>
+  </div>
 </div>
+<div class="card"><%= render @departamento %></div>

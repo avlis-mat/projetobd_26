@@ -1,10 +1,17 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @formulario %>
-
-<div>
-  <%= link_to "Edit this formulario", edit_formulario_path(@formulario) %> |
-  <%= link_to "Back to formularios", formularios_path %>
-
-  <%= button_to "Destroy this formulario", @formulario, method: :delete %>
+<div class="page-header">
+  <h1><%= @formulario.titulo %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_formulario_path(@formulario), class: "btn btn-primary" %>
+    <%= link_to "Voltar", formularios_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+<div class="card">
+  <%= render @formulario %>
+  <% if @formulario.arquivo.attached? %>
+    <div class="detail-row">
+      <span class="detail-label">Anexo:</span>
+      <%= link_to "Baixar arquivo", rails_blob_path(@formulario.arquivo, disposition: "attachment"),
+          class: "btn btn-secondary btn-sm" %>
+    </div>
+  <% end %>
 </div>

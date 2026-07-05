@@ -1,16 +1,27 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Modelos" %>
-
-<h1>Modelos</h1>
-
-<div id="modelos">
-  <% @modelos.each do |modelo| %>
-    <%= render modelo %>
-    <p>
-      <%= link_to "Show this modelo", modelo %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Modelos de Avaliação</h1>
+  <%= link_to "Novo Modelo", new_modelo_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New modelo", new_modelo_path %>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Nome</th><th>Versão</th><th>Status</th><th>Criado por</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @modelos.each do |m| %>
+      <tr>
+        <td><%= m.id %></td>
+        <td><%= m.nome %></td>
+        <td><%= m.versao %></td>
+        <td><%= m.status %></td>
+        <td><%= m.usuario&.nome %></td>
+        <td class="actions">
+          <%= link_to "Ver",    modelo_path(m), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_modelo_path(m), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", modelo_path(m),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

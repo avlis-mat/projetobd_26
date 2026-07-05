@@ -1,11 +1,2 @@
-<% content_for :title, "New materium" %>
-
-<h1>New materium</h1>
-
-<%= render "form", materium: @materium %>
-
-<br>
-
-<div>
-  <%= link_to "Back to materia", materia_path %>
-</div>
+<h1>Nova Matéria</h1>
+<div class="card"><%= render "form", materium: @materium %></div>

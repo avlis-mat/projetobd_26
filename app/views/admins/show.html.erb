@@ -1,10 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @admin %>
-
-<div>
-  <%= link_to "Edit this admin", edit_admin_path(@admin) %> |
-  <%= link_to "Back to admins", admins_path %>
-
-  <%= button_to "Destroy this admin", @admin, method: :delete %>
+<div class="page-header">
+  <h1><%= @admin.usuario&.nome %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_admin_path(@admin), class: "btn btn-primary" %>
+    <%= link_to "Voltar", admins_path, class: "btn btn-secondary" %>
+  </div>
 </div>
+<div class="card"><%= render @admin %></div>

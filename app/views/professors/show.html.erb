@@ -1,10 +1,14 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @professor %>
-
-<div>
-  <%= link_to "Edit this professor", edit_professor_path(@professor) %> |
-  <%= link_to "Back to professors", professors_path %>
-
-  <%= button_to "Destroy this professor", @professor, method: :delete %>
+<div class="page-header">
+  <h1><%= @professor.usuario&.nome %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_professor_path(@professor), class: "btn btn-primary" %>
+    <%= link_to "Voltar", professors_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+<div class="card">
+  <%= render @professor %>
+  <h2 style="margin-top: 20px;">Turmas</h2>
+  <% @professor.turmas.each do |t| %>
+    <p><%= t.materia&.nome %> — <%= t.turno %> (<%= t.horario %>)</p>
+  <% end %>
 </div>

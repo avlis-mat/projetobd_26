@@ -1,22 +1,5 @@
-<div id="<%= dom_id aluno %>">
-  <p>
-    <strong>Idusuario:</strong>
-    <%= aluno.idUsuario %>
-  </p>
-
-  <p>
-    <strong>Matricula:</strong>
-    <%= aluno.Matricula %>
-  </p>
-
-  <p>
-    <strong>Tipo graduacao:</strong>
-    <%= aluno.Tipo_graduacao %>
-  </p>
-
-  <p>
-    <strong>Semestre:</strong>
-    <%= aluno.Semestre %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Nome:</span>       <%= aluno.usuario&.nome %></div>
+<div class="detail-row"><span class="detail-label">Email:</span>      <%= aluno.usuario&.email %></div>
+<div class="detail-row"><span class="detail-label">Matrícula:</span>  <%= aluno.matricula %></div>
+<div class="detail-row"><span class="detail-label">Graduação:</span>  <%= aluno.tipo_graduacao %></div>
+<div class="detail-row"><span class="detail-label">Semestre:</span>   <%= aluno.semestre %></div>

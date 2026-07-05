@@ -1,12 +1,4 @@
-<div id="<%= dom_id professor %>">
-  <p>
-    <strong>Idusuario:</strong>
-    <%= professor.idUsuario %>
-  </p>
-
-  <p>
-    <strong>Dt contratacao:</strong>
-    <%= professor.dt_contratacao %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Nome:</span>           <%= professor.usuario&.nome %></div>
+<div class="detail-row"><span class="detail-label">Email:</span>          <%= professor.usuario&.email %></div>
+<div class="detail-row"><span class="detail-label">Departamento:</span>   <%= professor.usuario&.departamento&.nome %></div>
+<div class="detail-row"><span class="detail-label">Contratado em:</span>  <%= professor.dt_contratacao&.strftime("%d/%m/%Y") %></div>

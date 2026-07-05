@@ -3,20 +3,25 @@ class TurmasController < ApplicationController
 
   # GET /turmas or /turmas.json
   def index
-    @turmas = Turma.all
+    @turmas = Turma.includes(:materia, :professors, :alunos).all
   end
 
   # GET /turmas/1 or /turmas/1.json
   def show
+    @professors = @turma.professors.includes(:usuario)
+    @alunos = @turma.alunos.includes(:usuario)
+    @formularios = @turma.formularios
   end
 
   # GET /turmas/new
   def new
     @turma = Turma.new
+    @materias = Materium.all
   end
 
   # GET /turmas/1/edit
   def edit
+    @materias = Materium.all
   end
 
   # POST /turmas or /turmas.json
@@ -25,10 +30,12 @@ class TurmasController < ApplicationController
 
     respond_to do |format|
       if @turma.save
-        format.html { redirect_to @turma, notice: "Turma was successfully created." }
+        format.html { redirect_to @turma, notice: "Turma cirada com sucesso!" }
         format.json { render :show, status: :created, location: @turma }
       else
-        format.html { render :new, status: :unprocessable_content }
+        format.html { 
+        @materias = Materium.all  
+        render :new, status: :unprocessable_content }
         format.json { render json: @turma.errors, status: :unprocessable_content }
       end
     end
@@ -38,10 +45,12 @@ class TurmasController < ApplicationController
   def update
     respond_to do |format|
       if @turma.update(turma_params)
-        format.html { redirect_to @turma, notice: "Turma was successfully updated.", status: :see_other }
+        format.html { redirect_to @turma, notice: "Turma atualizada com sucesso!", status: :see_other }
         format.json { render :show, status: :ok, location: @turma }
       else
-        format.html { render :edit, status: :unprocessable_content }
+        format.html { 
+          @materias = Materium.all  
+          render :edit, status: :unprocessable_content }
         format.json { render json: @turma.errors, status: :unprocessable_content }
       end
     end
@@ -52,7 +61,7 @@ class TurmasController < ApplicationController
     @turma.destroy!
 
     respond_to do |format|
-      format.html { redirect_to turmas_path, notice: "Turma was successfully destroyed.", status: :see_other }
+      format.html { redirect_to turmas_path, notice: "Turma removida com sucesso!", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -65,6 +74,6 @@ class TurmasController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def turma_params
-      params.expect(turma: [ :Turno, :Horario, :Codigo, :idMateria ])
+      params.expect(turma: [ :turno, :horario, :codigo, :idmateria ])
     end
 end

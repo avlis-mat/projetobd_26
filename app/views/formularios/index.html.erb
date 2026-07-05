@@ -1,16 +1,28 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Formularios" %>
-
-<h1>Formularios</h1>
-
-<div id="formularios">
-  <% @formularios.each do |formulario| %>
-    <%= render formulario %>
-    <p>
-      <%= link_to "Show this formulario", formulario %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Formulários</h1>
+  <%= link_to "Novo Formulário", new_formulario_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New formulario", new_formulario_path %>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Título</th><th>Turma</th><th>Status</th><th>Início</th><th>Fim</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @formularios.each do |f| %>
+      <tr>
+        <td><%= f.id %></td>
+        <td><%= f.titulo %></td>
+        <td><%= f.turma&.codigo %></td>
+        <td><%= f.status %></td>
+        <td><%= f.data_inicio&.strftime("%d/%m/%Y") %></td>
+        <td><%= f.data_fim&.strftime("%d/%m/%Y") %></td>
+        <td class="actions">
+          <%= link_to "Ver",    formulario_path(f), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_formulario_path(f), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", formulario_path(f),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

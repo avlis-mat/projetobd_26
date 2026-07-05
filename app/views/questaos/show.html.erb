@@ -1,10 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @questao %>
-
-<div>
-  <%= link_to "Edit this questao", edit_questao_path(@questao) %> |
-  <%= link_to "Back to questaos", questaos_path %>
-
-  <%= button_to "Destroy this questao", @questao, method: :delete %>
+<div class="page-header">
+  <h1>Questão #<%= @questao.id %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_questao_path(@questao), class: "btn btn-primary" %>
+    <%= link_to "Voltar", questaos_path, class: "btn btn-secondary" %>
+  </div>
 </div>
+<div class="card"><%= render @questao %></div>

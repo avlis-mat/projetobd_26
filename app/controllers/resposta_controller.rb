@@ -3,7 +3,7 @@ class RespostaController < ApplicationController
 
   # GET /resposta or /resposta.json
   def index
-    @resposta = Respostum.all
+    @resposta = Respostum.includes(:aluno, :formulario, :questao).all
   end
 
   # GET /resposta/1 or /resposta/1.json
@@ -13,37 +13,41 @@ class RespostaController < ApplicationController
   # GET /resposta/new
   def new
     @respostum = Respostum.new
+    @alunos = Aluno.includes(:usuario).all
+    @formularios = Formulario.all
+    @questaos = Questao.all
   end
 
   # GET /resposta/1/edit
   def edit
+    @alunos = Aluno.includes(:usuario).all
+    @formularios = Formulario.all
+    @questaos = Questao.all
   end
 
   # POST /resposta or /resposta.json
   def create
     @respostum = Respostum.new(respostum_params)
 
-    respond_to do |format|
-      if @respostum.save
-        format.html { redirect_to @respostum, notice: "Respostum was successfully created." }
-        format.json { render :show, status: :created, location: @respostum }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @respostum.errors, status: :unprocessable_content }
-      end
+    if @respostum.save
+      redirect_to resposta_path, notice: "Resposta registrada com sucesso!"
+    else
+      @alunos = Aluno.includes(:usuario).all
+      @formularios = Formulario.all
+      @questaos = Questao.all
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /resposta/1 or /resposta/1.json
   def update
-    respond_to do |format|
-      if @respostum.update(respostum_params)
-        format.html { redirect_to @respostum, notice: "Respostum was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @respostum }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @respostum.errors, status: :unprocessable_content }
-      end
+    if @respostum.update(respostum_params)
+      redirect_to resposta_path, notice: "Resposta atualizada com sucesso!"
+    else
+      @alunos = Aluno.includes(:usuario).all
+      @formularios = Formulario.all
+      @questaos = Questao.all
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -52,7 +56,7 @@ class RespostaController < ApplicationController
     @respostum.destroy!
 
     respond_to do |format|
-      format.html { redirect_to resposta_path, notice: "Respostum was successfully destroyed.", status: :see_other }
+      format.html { redirect_to resposta_path, notice: "Respostum removida com sucesso!", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -65,6 +69,6 @@ class RespostaController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def respostum_params
-      params.expect(respostum: [ :conteudo, :respondido_em, :idAluno, :idFormulario, :idQuestao ])
+      params.expect(respostum: [ :conteudo, :respondido_em, :idaluno, :idformulario, :idquestao ])
     end
 end

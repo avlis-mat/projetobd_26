@@ -3,58 +3,80 @@ class ModelosController < ApplicationController
 
   # GET /modelos or /modelos.json
   def index
-    @modelos = Modelo.all
+    @modelos = Modelo.includes(:usuario).all
   end
 
   # GET /modelos/1 or /modelos/1.json
   def show
+    @questoes = @modelo.questaos
   end
 
   # GET /modelos/new
   def new
     @modelo = Modelo.new
+    @usuarios = Usuario.all
+    @questoes = Questao.all
   end
 
   # GET /modelos/1/edit
   def edit
+    @usuarios = Usuario.all
+    @questoes = Questao.all
+    @questoes_selecionadas = @modelo.questaos.pluck(:id)
   end
 
   # POST /modelos or /modelos.json
   def create
     @modelo = Modelo.new(modelo_params)
 
-    respond_to do |format|
-      if @modelo.save
-        format.html { redirect_to @modelo, notice: "Modelo was successfully created." }
-        format.json { render :show, status: :created, location: @modelo }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @modelo.errors, status: :unprocessable_content }
+    if @modelo.save
+      # Associa questões selecionadas ao modelo
+      if params[:questao_ids].present?
+        params[:questao_ids].each do |questao_id|
+          ModeloQuestao.create!(idmodelo: @modelo.id, idquestao: questao_id)
+        end
       end
+      redirect_to modelos_path, notice: "Modelo criado com sucesso!"
+    else
+      @usuarios = Usuario.all
+      @questoes = Questao.all
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /modelos/1 or /modelos/1.json
   def update
-    respond_to do |format|
-      if @modelo.update(modelo_params)
-        format.html { redirect_to @modelo, notice: "Modelo was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @modelo }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @modelo.errors, status: :unprocessable_content }
+    if @modelo.update(modelo_params)
+      # Atualiza questões associadas
+      if params[:questao_ids].present?
+        ModeloQuestao.where(idmodelo: @modelo.id).delete_all
+        params[:questao_ids].each do |questao_id|
+          ModeloQuestao.create!(idmodelo: @modelo.id, idquestao: questao_id)
+        end
       end
+      redirect_to modelos_path, notice: "Modelo atualizado com sucesso!"
+    else
+      @usuarios = Usuario.all
+      @questoes = Questao.all
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /modelos/1 or /modelos/1.json
   def destroy
+    ActiveRecord::Base.transaction do
+    # Primeiro remove as associações
+    ModeloQuestao.where(idmodelo: @modelo.id).delete_all
+    # Depois remove o modelo
     @modelo.destroy!
+  end
 
-    respond_to do |format|
-      format.html { redirect_to modelos_path, notice: "Modelo was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+  respond_to do |format|
+    format.html { redirect_to modelos_path, notice: "Modelo removido com sucesso!", status: :see_other }
+    format.json { head :no_content }
+  end
+rescue ActiveRecord::RecordNotDestroyed => e
+  redirect_to modelos_path, alert: "Erro ao remover: #{e.message}"
   end
 
   private
@@ -65,6 +87,6 @@ class ModelosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def modelo_params
-      params.expect(modelo: [ :Nome, :Descricao, :Versao, :Status, :Criado_em, :Atualizado_em, :idUsuario ])
+      params.expect(modelo: [ :nome, :descricao, :versao, :status, :criado_em, :atualizado_em, :idusuario ])
     end
 end

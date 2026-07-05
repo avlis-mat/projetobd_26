@@ -1,12 +1,4 @@
-<div id="<%= dom_id admin %>">
-  <p>
-    <strong>Idusuario:</strong>
-    <%= admin.idUsuario %>
-  </p>
-
-  <p>
-    <strong>Nv acesso:</strong>
-    <%= admin.nv_acesso %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Nome:</span>          <%= admin.usuario&.nome %></div>
+<div class="detail-row"><span class="detail-label">Email:</span>         <%= admin.usuario&.email %></div>
+<div class="detail-row"><span class="detail-label">Departamento:</span>  <%= admin.usuario&.departamento&.nome %></div>
+<div class="detail-row"><span class="detail-label">Nível de Acesso:</span><%= admin.nv_acesso %></div>

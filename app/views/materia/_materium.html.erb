@@ -1,22 +1,4 @@
-<div id="<%= dom_id materium %>">
-  <p>
-    <strong>Nome:</strong>
-    <%= materium.Nome %>
-  </p>
-
-  <p>
-    <strong>Codigo:</strong>
-    <%= materium.Codigo %>
-  </p>
-
-  <p>
-    <strong>Semestre:</strong>
-    <%= materium.Semestre %>
-  </p>
-
-  <p>
-    <strong>Iddepartamento:</strong>
-    <%= materium.idDepartamento %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Nome:</span>         <%= materium.nome %></div>
+<div class="detail-row"><span class="detail-label">Código:</span>       <%= materium.codigo %></div>
+<div class="detail-row"><span class="detail-label">Semestre:</span>     <%= materium.semestre %></div>
+<div class="detail-row"><span class="detail-label">Departamento:</span> <%= materium.departamento&.nome %></div>

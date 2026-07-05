@@ -1,16 +1,30 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Turmas" %>
-
-<h1>Turmas</h1>
-
-<div id="turmas">
-  <% @turmas.each do |turma| %>
-    <%= render turma %>
-    <p>
-      <%= link_to "Show this turma", turma %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Turmas</h1>
+  <%= link_to "Nova Turma", new_turma_path, class: "btn btn-primary" %>
 </div>
 
-<%= link_to "New turma", new_turma_path %>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th><th>Matéria</th><th>Turno</th><th>Horário</th><th>Código</th><th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @turmas.each do |turma| %>
+      <tr>
+        <td><%= turma.id %></td>
+        <td><%= turma.materia&.nome %></td>
+        <td><%= turma.turno %></td>
+        <td><%= turma.horario %></td>
+        <td><%= turma.codigo %></td>
+        <td class="actions">
+          <%= link_to "Ver",    turma_path(turma),      class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_turma_path(turma), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", turma_path(turma),
+              data: { turbo_method: :delete, turbo_confirm: "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

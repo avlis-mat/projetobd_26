@@ -1,37 +1,6 @@
-<div id="<%= dom_id modelo %>">
-  <p>
-    <strong>Nome:</strong>
-    <%= modelo.Nome %>
-  </p>
-
-  <p>
-    <strong>Descricao:</strong>
-    <%= modelo.Descricao %>
-  </p>
-
-  <p>
-    <strong>Versao:</strong>
-    <%= modelo.Versao %>
-  </p>
-
-  <p>
-    <strong>Status:</strong>
-    <%= modelo.Status %>
-  </p>
-
-  <p>
-    <strong>Criado em:</strong>
-    <%= modelo.Criado_em %>
-  </p>
-
-  <p>
-    <strong>Atualizado em:</strong>
-    <%= modelo.Atualizado_em %>
-  </p>
-
-  <p>
-    <strong>Idusuario:</strong>
-    <%= modelo.idUsuario %>
-  </p>
-
-</div>
+<div class="detail-row"><span class="detail-label">Nome:</span>        <%= modelo.nome %></div>
+<div class="detail-row"><span class="detail-label">Descrição:</span>   <%= modelo.descricao %></div>
+<div class="detail-row"><span class="detail-label">Versão:</span>      <%= modelo.versao %></div>
+<div class="detail-row"><span class="detail-label">Status:</span>      <%= modelo.status %></div>
+<div class="detail-row"><span class="detail-label">Criado por:</span>  <%= modelo.usuario&.nome %></div>
+<div class="detail-row"><span class="detail-label">Criado em:</span>   <%= modelo.criado_em&.strftime("%d/%m/%Y") %></div>

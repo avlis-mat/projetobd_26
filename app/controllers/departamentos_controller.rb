@@ -23,27 +23,19 @@ class DepartamentosController < ApplicationController
   def create
     @departamento = Departamento.new(departamento_params)
 
-    respond_to do |format|
-      if @departamento.save
-        format.html { redirect_to @departamento, notice: "Departamento was successfully created." }
-        format.json { render :show, status: :created, location: @departamento }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @departamento.errors, status: :unprocessable_content }
-      end
+    if @departamento.save
+      redirect_to departamentos_path, notice: "Departamento criado com sucesso!"
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /departamentos/1 or /departamentos/1.json
   def update
-    respond_to do |format|
-      if @departamento.update(departamento_params)
-        format.html { redirect_to @departamento, notice: "Departamento was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @departamento }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @departamento.errors, status: :unprocessable_content }
-      end
+    if @departamento.update(departamento_params)
+      redirect_to departamentos_path, notice: "Departamento atualizado com sucesso!"
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -51,10 +43,7 @@ class DepartamentosController < ApplicationController
   def destroy
     @departamento.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to departamentos_path, notice: "Departamento was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to departamentos_path, notice: "Departamento excluído com sucesso!"
   end
 
   private
@@ -65,6 +54,6 @@ class DepartamentosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def departamento_params
-      params.expect(departamento: [ :Codigo, :Nome ])
+      params.require(:departamento).permit(:nome, :codigo)
     end
 end

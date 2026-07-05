@@ -1,27 +1,36 @@
-<%= form_with(model: admin) do |form| %>
-  <% if admin.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(admin.errors.count, "error") %> prohibited this admin from being saved:</h2>
-
-      <ul>
-        <% admin.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :idUsuario, style: "display: block" %>
-    <%= form.number_field :idUsuario %>
+<%= form_with model: admin, url: admin.new_record? ? admins_path : admin_path(admin) do |f| %>
+  <h2>Dados do Usuário</h2>
+  <div class="form-group">
+    <label>Nome</label>
+    <input type="text" name="nome" value="<%= admin.usuario&.nome %>">
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" name="email" value="<%= admin.usuario&.email %>">
+  </div>
+  <div class="form-group">
+    <label>Senha</label>
+    <input type="password" name="senha">
+  </div>
+  <div class="form-group">
+    <label>Departamento</label>
+    <select name="iddepartamento">
+      <option value="">Selecione</option>
+      <% Departamento.all.each do |d| %>
+        <option value="<%= d.codigo %>"
+          <%= "selected" if admin.usuario&.iddepartamento == d.codigo %>>
+          <%= d.nome %>
+        </option>
+      <% end %>
+    </select>
   </div>
 
-  <div>
-    <%= form.label :nv_acesso, style: "display: block" %>
-    <%= form.text_field :nv_acesso %>
+  <h2 style="margin-top: 16px;">Dados do Admin</h2>
+  <div class="form-group">
+    <%= f.label :nv_acesso, "Nível de Acesso" %>
+    <%= f.select :nv_acesso, ["total", "parcial"], { prompt: "Selecione" } %>
   </div>
 
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", admins_path, class: "btn btn-secondary" %>
 <% end %>

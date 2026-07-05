@@ -1,27 +1,36 @@
-<%= form_with(model: professor) do |form| %>
-  <% if professor.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(professor.errors.count, "error") %> prohibited this professor from being saved:</h2>
-
-      <ul>
-        <% professor.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :idUsuario, style: "display: block" %>
-    <%= form.number_field :idUsuario %>
+<%= form_with model: professor, url: professor.new_record? ? professors_path : professor_path(professor) do |f| %>
+  <h2>Dados do Usuário</h2>
+  <div class="form-group">
+    <label>Nome</label>
+    <input type="text" name="nome" value="<%= professor.usuario&.nome %>">
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" name="email" value="<%= professor.usuario&.email %>">
+  </div>
+  <div class="form-group">
+    <label>Senha</label>
+    <input type="password" name="senha">
+  </div>
+  <div class="form-group">
+    <label>Departamento</label>
+    <select name="iddepartamento">
+      <option value="">Selecione</option>
+      <% Departamento.all.each do |d| %>
+        <option value="<%= d.codigo %>"
+          <%= "selected" if professor.usuario&.iddepartamento == d.codigo %>>
+          <%= d.nome %>
+        </option>
+      <% end %>
+    </select>
   </div>
 
-  <div>
-    <%= form.label :dt_contratacao, style: "display: block" %>
-    <%= form.date_field :dt_contratacao %>
+  <h2 style="margin-top: 16px;">Dados do Professor</h2>
+  <div class="form-group">
+    <%= f.label :dt_contratacao, "Data de Contratação" %>
+    <%= f.date_field :dt_contratacao %>
   </div>
 
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", professors_path, class: "btn btn-secondary" %>
 <% end %>

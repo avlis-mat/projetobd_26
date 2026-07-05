@@ -1,16 +1,26 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Alunos" %>
-
-<h1>Alunos</h1>
-
-<div id="alunos">
-  <% @alunos.each do |aluno| %>
-    <%= render aluno %>
-    <p>
-      <%= link_to "Show this aluno", aluno %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Alunos</h1>
+  <%= link_to "Novo Aluno", new_aluno_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New aluno", new_aluno_path %>
+<table>
+  <thead>
+    <tr><th>Matrícula</th><th>Nome</th><th>Graduação</th><th>Semestre</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @alunos.each do |a| %>
+      <tr>
+        <td><%= a.matricula %></td>
+        <td><%= a.usuario&.nome %></td>
+        <td><%= a.tipo_graduacao %></td>
+        <td><%= a.semestre %></td>
+        <td class="actions">
+          <%= link_to "Ver",    aluno_path(a), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_aluno_path(a), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", aluno_path(a),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

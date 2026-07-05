@@ -1,42 +1,82 @@
-<%= form_with(model: usuario) do |form| %>
-  <% if usuario.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(usuario.errors.count, "error") %> prohibited this usuario from being saved:</h2>
+<%= form_with model: usuario do |f| %>
+  <div class="form-group">
+    <%= f.label :nome, "Nome" %>
+    <%= f.text_field :nome %>
+  </div>
+  <div class="form-group">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email %>
+  </div>
+  <div class="form-group">
+    <%= f.label :senha, "Senha" %>
+    <%= f.password_field :senha %>
+  </div>
+  <div class="form-group">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, ["ativo", "inativo"], { prompt: "Selecione" } %>
+  </div>
+  <div class="form-group">
+    <%= f.label :iddepartamento, "Departamento" %>
+    <%= f.select :iddepartamento, Departamento.all.map { |d| [d.nome, d.codigo] }, { prompt: "Selecione" } %>
+  </div>
 
-      <ul>
-        <% usuario.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+  <% if usuario.new_record? %>
+    <div class="form-group">
+      <label>Tipo de Usuário</label>
+      <select name="tipo_usuario" id="tipo_usuario" onchange="mostrarCamposTipo()">
+        <option value="">Selecione o tipo</option>
+        <option value="aluno">Aluno</option>
+        <option value="professor">Professor</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <div id="campos_aluno" style="display:none">
+      <div class="form-group">
+        <label>Matrícula</label>
+        <input type="text" name="matricula" placeholder="190001">
+      </div>
+      <div class="form-group">
+        <label>Tipo de Graduação</label>
+        <select name="tipo_graduacao">
+          <option value="Licenciatura">Licenciatura</option>
+          <option value="Bacharelado">Bacharelado</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Semestre</label>
+        <input type="text" name="semestre" placeholder="2026/1">
+      </div>
+    </div>
+
+    <div id="campos_professor" style="display:none">
+      <div class="form-group">
+        <label>Data de Contratação</label>
+        <input type="date" name="dt_contratacao">
+      </div>
+    </div>
+
+    <div id="campos_admin" style="display:none">
+      <div class="form-group">
+        <label>Nível de Acesso</label>
+        <select name="nv_acesso">
+          <option value="total">Total</option>
+          <option value="parcial">Parcial</option>
+        </select>
+      </div>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :Nome, style: "display: block" %>
-    <%= form.text_field :Nome %>
-  </div>
-
-  <div>
-    <%= form.label :Email, style: "display: block" %>
-    <%= form.text_field :Email %>
-  </div>
-
-  <div>
-    <%= form.label :Senha, style: "display: block" %>
-    <%= form.text_field :Senha %>
-  </div>
-
-  <div>
-    <%= form.label :Status, style: "display: block" %>
-    <%= form.text_field :Status %>
-  </div>
-
-  <div>
-    <%= form.label :idDepartamento, style: "display: block" %>
-    <%= form.number_field :idDepartamento %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", usuarios_path, class: "btn btn-secondary" %>
 <% end %>
+
+
+<script>
+function mostrarCamposTipo() {
+  var tipo = document.getElementById("tipo_usuario").value;
+  document.getElementById("campos_aluno").style.display    = tipo === "aluno"     ? "block" : "none";
+  document.getElementById("campos_professor").style.display = tipo === "professor" ? "block" : "none";
+  document.getElementById("campos_admin").style.display    = tipo === "admin"     ? "block" : "none";
+}
+</script>

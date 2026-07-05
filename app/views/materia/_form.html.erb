@@ -1,37 +1,20 @@
-<%= form_with(model: materium) do |form| %>
-  <% if materium.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(materium.errors.count, "error") %> prohibited this materium from being saved:</h2>
-
-      <ul>
-        <% materium.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :Nome, style: "display: block" %>
-    <%= form.text_field :Nome %>
+<%= form_with model: materium do |f| %>
+  <div class="form-group">
+    <%= f.label :nome, "Nome" %>
+    <%= f.text_field :nome %>
   </div>
-
-  <div>
-    <%= form.label :Codigo, style: "display: block" %>
-    <%= form.text_field :Codigo %>
+  <div class="form-group">
+    <%= f.label :codigo, "Código" %>
+    <%= f.text_field :codigo %>
   </div>
-
-  <div>
-    <%= form.label :Semestre, style: "display: block" %>
-    <%= form.text_field :Semestre %>
+  <div class="form-group">
+    <%= f.label :semestre, "Semestre" %>
+    <%= f.text_field :semestre, placeholder: "Ex: 2026/1" %>
   </div>
-
-  <div>
-    <%= form.label :idDepartamento, style: "display: block" %>
-    <%= form.number_field :idDepartamento %>
+  <div class="form-group">
+    <%= f.label :iddepartamento, "Departamento" %>
+    <%= f.select :iddepartamento, Departamento.all.map { |d| [d.nome, d.codigo] }, { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", materia_path, class: "btn btn-secondary" %>
 <% end %>

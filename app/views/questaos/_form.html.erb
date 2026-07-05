@@ -1,42 +1,16 @@
-<%= form_with(model: questao) do |form| %>
-  <% if questao.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(questao.errors.count, "error") %> prohibited this questao from being saved:</h2>
-
-      <ul>
-        <% questao.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :Enunciado, style: "display: block" %>
-    <%= form.text_field :Enunciado %>
+<%= form_with model: questao do |f| %>
+  <div class="form-group">
+    <%= f.label :enunciado, "Enunciado" %>
+    <%= f.text_area :enunciado %>
   </div>
-
-  <div>
-    <%= form.label :Versao, style: "display: block" %>
-    <%= form.text_field :Versao %>
+  <div class="form-group">
+    <%= f.label :versao, "Versão" %>
+    <%= f.text_field :versao, placeholder: "Ex: 1.0" %>
   </div>
-
-  <div>
-    <%= form.label :Status, style: "display: block" %>
-    <%= form.text_field :Status %>
+  <div class="form-group">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, ["ativo", "inativo"], { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.label :Criado_em, style: "display: block" %>
-    <%= form.datetime_field :Criado_em %>
-  </div>
-
-  <div>
-    <%= form.label :Atualizado_em, style: "display: block" %>
-    <%= form.datetime_field :Atualizado_em %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", questaos_path, class: "btn btn-secondary" %>
 <% end %>

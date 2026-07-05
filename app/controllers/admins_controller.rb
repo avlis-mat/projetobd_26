@@ -1,70 +1,80 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: %i[ show edit update destroy ]
 
-  # GET /admins or /admins.json
+  
   def index
-    @admins = Admin.all
+    @admins = Admin.includes(:ususario).all
   end
 
-  # GET /admins/1 or /admins/1.json
+  
   def show
   end
 
   # GET /admins/new
   def new
     @admin = Admin.new
+    @usuario = Usuario.new
   end
 
   # GET /admins/1/edit
   def edit
+    @usuario = @admin.usuario
   end
 
-  # POST /admins or /admins.json
+  
   def create
-    @admin = Admin.new(admin_params)
+    ActiveRecord::Base.transaction do
+      @usuario = Usuario.new(usuario_params)
+      @usuario.save!
 
-    respond_to do |format|
-      if @admin.save
-        format.html { redirect_to @admin, notice: "Admin was successfully created." }
-        format.json { render :show, status: :created, location: @admin }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @admin.errors, status: :unprocessable_content }
-      end
+      @admin = Admin.new(admin_params)
+      @admin.idusuario = @usuario.id
+      @admin.save!
     end
+
+    redirect_to admins_path, notice: "Admin criado com sucesso!"
+    rescue ActiveRecord::RecordInvalid => e
+    @usuario ||= Usuario.new
+    flash.now[:alert] = "Erro ao criar admin: #{e.message}"
+    render :new, status: :unprocessable_entity
   end
 
-  # PATCH/PUT /admins/1 or /admins/1.json
+  
   def update
-    respond_to do |format|
-      if @admin.update(admin_params)
-        format.html { redirect_to @admin, notice: "Admin was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @admin }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @admin.errors, status: :unprocessable_content }
-      end
+    ActiveRecord::Base.transaction do
+      @admin.usuario.update!(usuario_params)
+      @admin.update!(admin_params)
     end
+
+    redirect_to admins_path, notice: "Admin atualizado com sucesso!"
+    rescue ActiveRecord::RecordInvalid => e
+    flash.now[:alert] = "Erro ao atualizar: #{e.message}"
+    render :edit, status: :unprocessable_entity
   end
 
-  # DELETE /admins/1 or /admins/1.json
+  
   def destroy
-    @admin.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to admins_path, notice: "Admin was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+    ActiveRecord::Base.transaction do
+      usuario = @admin.usuario
+      @admin.destroy!
+      usuario.destroy!
     end
+
+    redirect_to admins_path, notice: "Admin removido com sucesso!"
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_admin
-      @admin = Admin.find(params.expect(:id))
+      @admin = Admin.find(params[:id])
+    end
+
+    def usuario_params
+      params.require(:usuario).permit(:nome, :email, :senha, :status, :iddepartamento)
     end
 
     # Only allow a list of trusted parameters through.
     def admin_params
-      params.expect(admin: [ :idUsuario, :nv_acesso ])
+      params.require(:admin).permit(:nv_acesso)
     end
 end

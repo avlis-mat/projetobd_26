@@ -1,0 +1,127 @@
+<h1>Painel — Recursos do Banco</h1>
+
+<%# ======================== VIEW ======================== %>
+<div class="card" style="margin-bottom: 24px;">
+  <h2> View: Formulários por Turma</h2>
+  <p style="color:#666; font-size:13px; margin-bottom:12px;">
+    Gerado pela <code>vw_formularios_turma</code> — view criada diretamente no PostgreSQL.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Turma ID</th>
+        <th>Turno</th>
+        <th>Matéria</th>
+        <th>Total Formulários</th>
+        <th>Taxa Encerramento</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @vw_formularios.each do |row| %>
+        <tr>
+          <td><%= row["turma_id"] %></td>
+          <td><%= row["turno"] %></td>
+          <td><%= row["materia"] %></td>
+          <td><%= row["total_formularios"] %></td>
+          <td><%= "%.0f%%" % (row["taxa_encerramento"].to_f * 100) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%# ======================== PROCEDURE ======================== %>
+<div class="card" style="margin-bottom: 24px;">
+  <h2>⚙️ Procedure: Encerrar Formulários Vencidos</h2>
+  <p style="color:#666; font-size:13px; margin-bottom:12px;">
+    Executa a <code>encerrar_formularios_vencidos()</code> — procedure criada no PostgreSQL
+    que atualiza o status de formulários cuja data de fim já passou.
+  </p>
+
+  <% if @formularios_vencidos.any? %>
+    <p style="color:#e67e22; margin-bottom:12px;">
+     <strong><%= @formularios_vencidos.count %></strong>
+      formulário(s) vencido(s) ainda com status aberto.
+    </p>
+    <table style="margin-bottom:16px;">
+      <thead>
+        <tr><th>Título</th><th>Data Fim</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% @formularios_vencidos.each do |f| %>
+          <tr>
+            <td><%= f.titulo %></td>
+            <td><%= f.data_fim&.strftime("%d/%m/%Y") %></td>
+            <td><%= f.status %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p style="color:#27ae60; margin-bottom:12px;">
+      Nenhum formulário vencido pendente.
+    </p>
+  <% end %>
+
+  <%= button_to "▶ Executar Procedure",
+      executar_procedure_painel_index_path,
+      method: :post,
+      class: "btn btn-primary",
+      data: { turbo_confirm: "Executar procedure para encerrar formulários vencidos?" } %>
+</div>
+
+<%# ======================== TRIGGER respondido_em ======================== %>
+<div class="card" style="margin-bottom: 24px;">
+  <h2> Trigger: respondido_em preenchido automaticamente</h2>
+  <p style="color:#666; font-size:13px; margin-bottom:12px;">
+    O trigger <code>trg_respondido_em</code> preenche <code>respondido_em</code>
+    automaticamente ao inserir uma resposta — sem passar o campo no formulário.
+  </p>
+  <table>
+    <thead>
+      <tr><th>Aluno</th><th>Formulário</th><th>Questão</th><th>Respondido em (automático)</th></tr>
+    </thead>
+    <tbody>
+      <% @ultimas_respostas.each do |r| %>
+        <tr>
+          <td><%= r.aluno&.usuario&.nome %></td>
+          <td><%= r.formulario&.titulo %></td>
+          <td><%= truncate(r.questao&.enunciado, length: 40) %></td>
+          <td style="color:#27ae60; font-weight:bold;">
+            <%= r.respondido_em&.strftime("%d/%m/%Y %H:%M:%S") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%# ======================== TRIGGER atualizado_em ======================== %>
+<div class="card">
+  <h2> Trigger: atualizado_em nas Questões</h2>
+  <p style="color:#666; font-size:13px; margin-bottom:12px;">
+    O trigger <code>trg_questao_atualizado_em</code> atualiza <code>atualizado_em</code>
+    automaticamente ao editar uma questão — mesmo sem passar o campo no formulário.
+  </p>
+  <table>
+    <thead>
+      <tr><th>Questão</th><th>Versão</th><th>Criado em</th><th>Atualizado em (automático)</th></tr>
+    </thead>
+    <tbody>
+      <% @questoes_recentes.each do |q| %>
+        <tr>
+          <td><%= truncate(q.enunciado, length: 50) %></td>
+          <td><%= q.versao %></td>
+          <td><%= q.criado_em&.strftime("%d/%m/%Y %H:%M:%S") %></td>
+          <td style="color:#27ae60; font-weight:bold;">
+            <%= q.atualizado_em&.strftime("%d/%m/%Y %H:%M:%S") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p style="margin-top:12px;">
+    <%= link_to " Editar uma questão para ver o trigger em ação",
+        questaos_path, class: "btn btn-primary btn-sm" %>
+  </p>
+</div>

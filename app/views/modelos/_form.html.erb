@@ -1,52 +1,34 @@
-<%= form_with(model: modelo) do |form| %>
-  <% if modelo.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(modelo.errors.count, "error") %> prohibited this modelo from being saved:</h2>
-
-      <ul>
-        <% modelo.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :Nome, style: "display: block" %>
-    <%= form.text_field :Nome %>
+<%= form_with model: modelo do |f| %>
+  <div class="form-group">
+    <%= f.label :nome, "Nome" %>
+    <%= f.text_field :nome %>
   </div>
-
-  <div>
-    <%= form.label :Descricao, style: "display: block" %>
-    <%= form.text_field :Descricao %>
+  <div class="form-group">
+    <%= f.label :descricao, "Descrição" %>
+    <%= f.text_area :descricao %>
   </div>
-
-  <div>
-    <%= form.label :Versao, style: "display: block" %>
-    <%= form.text_field :Versao %>
+  <div class="form-group">
+    <%= f.label :versao, "Versão" %>
+    <%= f.text_field :versao, placeholder: "Ex: 1.0" %>
   </div>
-
-  <div>
-    <%= form.label :Status, style: "display: block" %>
-    <%= form.text_field :Status %>
+  <div class="form-group">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, ["ativo", "inativo"], { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.label :Criado_em, style: "display: block" %>
-    <%= form.datetime_field :Criado_em %>
+  <div class="form-group">
+    <%= f.label :idusuario, "Criado por" %>
+    <%= f.select :idusuario, Usuario.all.map { |u| [u.nome, u.id] }, { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.label :Atualizado_em, style: "display: block" %>
-    <%= form.datetime_field :Atualizado_em %>
+  <div class="form-group">
+    <label>Questões</label>
+    <% Questao.all.each do |q| %>
+      <div style="margin: 4px 0;">
+        <input type="checkbox" name="questao_ids[]" value="<%= q.id %>"
+          <%= "checked" if modelo.persisted? && modelo.questaos.include?(q) %>>
+        <%= q.enunciado %>
+      </div>
+    <% end %>
   </div>
-
-  <div>
-    <%= form.label :idUsuario, style: "display: block" %>
-    <%= form.number_field :idUsuario %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", modelos_path, class: "btn btn-secondary" %>
 <% end %>

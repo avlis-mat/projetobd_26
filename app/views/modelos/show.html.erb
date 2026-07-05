@@ -1,10 +1,22 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @modelo %>
-
-<div>
-  <%= link_to "Edit this modelo", edit_modelo_path(@modelo) %> |
-  <%= link_to "Back to modelos", modelos_path %>
-
-  <%= button_to "Destroy this modelo", @modelo, method: :delete %>
+<div class="page-header">
+  <h1><%= @modelo.nome %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_modelo_path(@modelo), class: "btn btn-primary" %>
+    <%= link_to "Voltar", modelos_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+<div class="card">
+  <%= render @modelo %>
+  <h2 style="margin-top: 20px;">Questões do Modelo</h2>
+  <% if @questoes.any? %>
+    <ul style="margin-top: 10px;">
+      <% @questoes.each do |q| %>
+        <li style="padding: 6px 0; border-bottom: 1px solid #eee;">
+          <%= q.enunciado %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p style="color:#888; margin-top:10px;">Nenhuma questão vinculada.</p>
+  <% end %>
 </div>

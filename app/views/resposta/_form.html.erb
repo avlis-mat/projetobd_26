@@ -1,42 +1,22 @@
-<%= form_with(model: respostum) do |form| %>
-  <% if respostum.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(respostum.errors.count, "error") %> prohibited this respostum from being saved:</h2>
-
-      <ul>
-        <% respostum.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :conteudo, style: "display: block" %>
-    <%= form.text_field :conteudo %>
+<%= form_with model: respostum do |f| %>
+  <div class="form-group">
+    <%= f.label :idaluno, "Aluno" %>
+    <%= f.select :idaluno,
+        Aluno.includes(:usuario).all.map { |a| [a.usuario&.nome, a.idusuario] },
+        { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.label :respondido_em, style: "display: block" %>
-    <%= form.datetime_field :respondido_em %>
+  <div class="form-group">
+    <%= f.label :idformulario, "Formulário" %>
+    <%= f.select :idformulario, Formulario.all.map { |f| [f.titulo, f.id] }, { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.label :idAluno, style: "display: block" %>
-    <%= form.number_field :idAluno %>
+  <div class="form-group">
+    <%= f.label :idquestao, "Questão" %>
+    <%= f.select :idquestao, Questao.all.map { |q| [truncate(q.enunciado, length: 60), q.id] }, { prompt: "Selecione" } %>
   </div>
-
-  <div>
-    <%= form.label :idFormulario, style: "display: block" %>
-    <%= form.number_field :idFormulario %>
+  <div class="form-group">
+    <%= f.label :conteudo, "Resposta" %>
+    <%= f.text_area :conteudo %>
   </div>
-
-  <div>
-    <%= form.label :idQuestao, style: "display: block" %>
-    <%= form.number_field :idQuestao %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.submit "Salvar", class: "btn btn-success" %>
+  <%= link_to "Cancelar", resposta_path, class: "btn btn-secondary" %>
 <% end %>

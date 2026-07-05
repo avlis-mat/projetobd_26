@@ -1,10 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @respostum %>
-
-<div>
-  <%= link_to "Edit this respostum", edit_respostum_path(@respostum) %> |
-  <%= link_to "Back to resposta", resposta_path %>
-
-  <%= button_to "Destroy this respostum", @respostum, method: :delete %>
+<div class="page-header">
+  <h1>Resposta #<%= @respostum.id %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_respostum_path(@respostum), class: "btn btn-primary" %>
+    <%= link_to "Voltar", resposta_path, class: "btn btn-secondary" %>
+  </div>
 </div>
+<div class="card"><%= render @respostum %></div>

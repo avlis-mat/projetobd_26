@@ -1,28 +1,120 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Projetobd" %></title>
+    <title>Sistema de Avaliação Acadêmica</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-  </head>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Arial, sans-serif; background: #f4f6f9; color: #333; }
 
+      nav {
+        background: #1a3a5c; padding: 12px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      nav .brand { color: white; font-size: 18px; font-weight: bold; text-decoration: none; }
+      nav .nav-links a {
+        color: #cdd9e5; text-decoration: none;
+        margin-left: 16px; font-size: 14px;
+      }
+      nav .nav-links a:hover { color: white; }
+      nav .nav-user { color: #cdd9e5; font-size: 13px; }
+      nav .nav-user a { color: #e74c3c; margin-left: 8px; }
+
+      .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+      .flash-notice {
+        background: #d4edda; border: 1px solid #c3e6cb;
+        color: #155724; padding: 10px 16px; border-radius: 6px; margin-bottom: 20px;
+      }
+      .flash-alert {
+        background: #f8d7da; border: 1px solid #f5c6cb;
+        color: #721c24; padding: 10px 16px; border-radius: 6px; margin-bottom: 20px;
+      }
+
+      h1 { font-size: 24px; margin-bottom: 20px; color: #1a3a5c; }
+      h2 { font-size: 20px; margin-bottom: 16px; color: #1a3a5c; }
+
+      table { width: 100%; border-collapse: collapse; background: white;
+              border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+      thead { background: #1a3a5c; color: white; }
+      th { padding: 12px 16px; text-align: left; font-size: 14px; }
+      td { padding: 11px 16px; font-size: 14px; border-bottom: 1px solid #eee; }
+      tr:last-child td { border-bottom: none; }
+      tr:hover td { background: #f0f4f8; }
+
+      .btn {
+        display: inline-block; padding: 8px 16px; border-radius: 5px;
+        text-decoration: none; font-size: 13px; font-weight: bold;
+        border: none; cursor: pointer;
+      }
+      .btn-primary   { background: #1a3a5c; color: white; }
+      .btn-secondary { background: #6c757d; color: white; }
+      .btn-success   { background: #28a745; color: white; }
+      .btn-danger    { background: #dc3545; color: white; }
+      .btn-sm        { padding: 5px 10px; font-size: 12px; }
+      .btn:hover     { opacity: 0.85; }
+
+      .card {
+        background: white; border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 20px;
+      }
+
+      .form-group { margin-bottom: 16px; }
+      .form-group label { display: block; font-size: 13px; font-weight: bold;
+                          margin-bottom: 4px; color: #555; }
+      .form-group input, .form-group select, .form-group textarea {
+        width: 100%; padding: 8px 12px; border: 1px solid #ccc;
+        border-radius: 5px; font-size: 14px;
+      }
+      .form-group textarea { height: 80px; resize: vertical; }
+
+      .actions { display: flex; gap: 8px; align-items: center; }
+      .page-header { display: flex; justify-content: space-between;
+                     align-items: center; margin-bottom: 20px; }
+
+      .detail-row { display: flex; padding: 10px 0;
+                    border-bottom: 1px solid #eee; font-size: 14px; }
+      .detail-label { font-weight: bold; width: 200px; color: #555; }
+    </style>
+  </head>
   <body>
-    <%= yield %>
+    <nav>
+      <a class="brand" href="<%= root_path %>">🎓 Avaliação Acadêmica UnB</a>
+      <div class="nav-links">
+        <% if current_usuario %>
+          <%= link_to "Painel",        root_path %>
+          <%= link_to "Turmas",        turmas_path %>
+          <%= link_to "Formulários",   formularios_path %>
+          <%= link_to "Usuários",      usuarios_path %>
+          <%= link_to "Departamentos", departamentos_path %>
+          <%= link_to "Matérias",      materia_path %>
+          <%= link_to "Modelos",       modelos_path %>
+          <%= link_to "Questões",      questaos_path %>
+          <%= link_to "Respostas",     resposta_path %>
+        <% end %>
+      </div>
+      <div class="nav-user">
+        <% if current_usuario %>
+          <%= current_usuario.nome %>
+          (<%= current_tipo.to_s.capitalize %>)
+          <%= link_to "Sair", logout_path, data: { turbo_method: :delete } %>
+        <% end %>
+      </div>
+    </nav>
+
+    <div class="container">
+      <% if flash[:notice] %>
+        <div class="flash-notice"><%= flash[:notice] %></div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div class="flash-alert"><%= flash[:alert] %></div>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

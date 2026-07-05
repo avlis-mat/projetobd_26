@@ -1,16 +1,27 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Questaos" %>
-
-<h1>Questaos</h1>
-
-<div id="questaos">
-  <% @questaos.each do |questao| %>
-    <%= render questao %>
-    <p>
-      <%= link_to "Show this questao", questao %>
-    </p>
-  <% end %>
+<div class="page-header">
+  <h1>Questões</h1>
+  <%= link_to "Nova Questão", new_questao_path, class: "btn btn-primary" %>
 </div>
-
-<%= link_to "New questao", new_questao_path %>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Enunciado</th><th>Versão</th><th>Status</th><th>Criado em</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+    <% @questaos.each do |q| %>
+      <tr>
+        <td><%= q.id %></td>
+        <td><%= truncate(q.enunciado, length: 60) %></td>
+        <td><%= q.versao %></td>
+        <td><%= q.status %></td>
+        <td><%= q.criado_em&.strftime("%d/%m/%Y") %></td>
+        <td class="actions">
+          <%= link_to "Ver",    questao_path(q), class: "btn btn-secondary btn-sm" %>
+          <%= link_to "Editar", edit_questao_path(q), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Excluir", questao_path(q),
+              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+              class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

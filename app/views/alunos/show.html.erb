@@ -1,10 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @aluno %>
-
-<div>
-  <%= link_to "Edit this aluno", edit_aluno_path(@aluno) %> |
-  <%= link_to "Back to alunos", alunos_path %>
-
-  <%= button_to "Destroy this aluno", @aluno, method: :delete %>
+<div class="page-header">
+  <h1><%= @aluno.usuario&.nome %></h1>
+  <div class="actions">
+    <%= link_to "Editar", edit_aluno_path(@aluno), class: "btn btn-primary" %>
+    <%= link_to "Voltar", alunos_path, class: "btn btn-secondary" %>
+  </div>
 </div>
+<div class="card"><%= render @aluno %></div>
