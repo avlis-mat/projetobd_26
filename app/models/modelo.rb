@@ -9,6 +9,8 @@ class Modelo < ApplicationRecord
     has_many :questaos,         through: :modelo_questaos
     has_many :formularios,      foreign_key: :idmodelo,  class_name: "Formulario"
 
+    before_destroy :verificar_formularios
+
     private
 
     def definir_timestamps
@@ -18,5 +20,12 @@ class Modelo < ApplicationRecord
 
     def atualizar_timestamp
         self.atualizado_em = Time.now
+    end
+
+    def verificar_formularios
+        if formularios.exists?
+            errors.add(:base, "Não é possível excluir um modelo que possui formulários associados.")
+            throw :abort
+        end
     end
 end

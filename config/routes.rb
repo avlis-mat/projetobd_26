@@ -12,6 +12,19 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :formularios do
+  member do
+    get  :responder      # exibe as questões para responder
+    post :enviar_respostas  # salva todas as respostas de uma vez
+  end
+end
+
+resources :resposta, controller: "resposta" do
+  collection do
+    get :minhas_respostas  # agrupa respostas do aluno por formulário
+  end
+end
+
   # Recursos principais
   resources :resposta
   resources :admins

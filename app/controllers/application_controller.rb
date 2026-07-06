@@ -18,12 +18,27 @@ class ApplicationController < ActionController::Base
   helper_method :current_usuario
 
   def current_tipo
-    return :admin     if Admin.exists?(idusuario: session[:usuario_id])
-    return :professor if Professor.exists?(idusuario: session[:usuario_id])
-    return :aluno     if Aluno.exists?(idusuario: session[:usuario_id])
-    nil
+    return @current_tipo if defined?(@current_tipo)
+    @current_tipo = if Admin.exists?(idusuario: session[:usuario_id])
+      :admin
+    elsif Professor.exists?(idusuario: session[:usuario_id])
+      :professor
+    elsif Aluno.exists?(idusuario: session[:usuario_id])
+      :aluno
+    end
   end
   helper_method :current_tipo
+
+  def current_aluno
+    @current_aluno ||= Aluno.find_by(idusuario: session[:usuario_id])
+  end
+  helper_method :current_aluno
+
+  def require_admin_ou_professor
+    unless [:admin, :professor].include?(current_tipo)
+      redirect_to root_path, alert: "Acesso não permitido."
+    end
+  end
 
   def require_admin
     unless current_tipo == :admin

@@ -1,15 +1,28 @@
 class TurmasController < ApplicationController
   before_action :set_turma, only: %i[ show edit update destroy ]
+  before_action :require_admin_ou_professor, only: %i[new create edit update destroy]
+
 
   # GET /turmas or /turmas.json
   def index
-    @turmas = Turma.includes(:materia, :professors, :alunos).all
+    @turmas = if current_tipo == :aluno
+      current_aluno.turmas.includes(:materia)
+    else
+      Turma.includes(:materia, :professors, :alunos).all
+    end
   end
 
   # GET /turmas/1 or /turmas/1.json
   def show
+    # Aluno só pode ver turmas às quais pertence
+    if current_tipo == :aluno
+      unless current_aluno.turmas.include?(@turma)
+        redirect_to turmas_path, alert: "Você não tem acesso a esta turma."
+        return
+      end
+    end
     @professors = @turma.professors.includes(:usuario)
-    @alunos = @turma.alunos.includes(:usuario)
+    @alunos      = @turma.alunos.includes(:usuario)
     @formularios = @turma.formularios
   end
 
@@ -58,11 +71,16 @@ class TurmasController < ApplicationController
 
   # DELETE /turmas/1 or /turmas/1.json
   def destroy
-    @turma.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to turmas_path, notice: "Turma removida com sucesso!", status: :see_other }
-      format.json { head :no_content }
+    if @turma.destroy
+      respond_to do |format|
+        format.html { redirect_to turmas_path, notice: "Turma removida com sucesso!", status: :see_other }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to turmas_path, alert: @turma.errors.full_messages.to_sentence, status: :see_other }
+        format.json { render json: @turma.errors, status: :unprocessable_content }
+      end
     end
   end
 

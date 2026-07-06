@@ -3,7 +3,7 @@ class AdminsController < ApplicationController
 
   
   def index
-    @admins = Admin.includes(:ususario).all
+    @admins = Admin.includes(:usuario).all
   end
 
   

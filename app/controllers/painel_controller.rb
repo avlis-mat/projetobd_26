@@ -1,24 +1,31 @@
 class PainelController < ApplicationController
   def index
-    # Dados da View do banco
-    @vw_formularios = ActiveRecord::Base.connection.execute(
-      "SELECT * FROM vw_formularios_turma ORDER BY turma_id"
-    )
-
-    # Últimas respostas — demonstra o trigger respondido_em
-    @ultimas_respostas = Respostum.includes(:aluno, :questao, :formulario)
-                                 .order(respondido_em: :desc)
-                                 .limit(5)
-
-    # Últimas questões editadas — demonstra o trigger atualizado_em
-    @questoes_recentes = Questao.where.not(atualizado_em: nil)
-                                .order(atualizado_em: :desc)
-                                .limit(5)
-
-    # Formulários abertos que podem ser encerrados pela procedure
-    @formularios_vencidos = Formulario.where(
-      "data_fim < ? AND status != ?", Date.today, "encerrado"
-    )
+    if current_tipo == :aluno
+      # Dashboard simplificado para aluno
+      @vw_formularios = ActiveRecord::Base.connection.execute(
+        "SELECT * FROM vw_formularios_turma WHERE turma_id IN (#{current_aluno.turmas.pluck(:id).join(',')}) ORDER BY turma_id"
+      )
+      @ultimas_respostas = Respostum
+        .includes(:questao, :formulario, :aluno => :usuario)
+        .where(idaluno: current_aluno.idusuario)
+        .order(respondido_em: :desc)
+        .limit(5)
+      @questoes_recentes = []
+      @formularios_vencidos = []
+    else
+      @vw_formularios = ActiveRecord::Base.connection.execute(
+        "SELECT * FROM vw_formularios_turma ORDER BY turma_id"
+      )
+      @ultimas_respostas = Respostum.includes(:aluno, :questao, :formulario)
+                                  .order(respondido_em: :desc)
+                                  .limit(5)
+      @questoes_recentes = Questao.where.not(atualizado_em: nil)
+                                  .order(atualizado_em: :desc)
+                                  .limit(5)
+      @formularios_vencidos = Formulario.where(
+        "data_fim < ? AND status != ?", Date.today, "encerrado"
+      )
+    end
   end
 
   def executar_procedure

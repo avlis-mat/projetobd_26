@@ -9,9 +9,18 @@ class Formulario < ApplicationRecord
     has_many :respostas, foreign_key: "idformulario", class_name: "Respostum"
     has_one_attached :arquivo
 
+    before_destroy :verificar_respostas
+
     private
 
     def definir_criado_em
         self.criado_em = Time.now
+    end
+
+    def verificar_respostas
+        if respostas.exists?
+            errors.add(:base, "Não é possível excluir o formulário, pois existem respostas associadas a ele.")
+            throw(:abort)
+        end
     end
 end

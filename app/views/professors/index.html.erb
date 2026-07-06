@@ -12,7 +12,7 @@
         <td><%= p.usuario&.nome %></td>
         <td><%= p.usuario&.email %></td>
         <td><%= p.dt_contratacao&.strftime("%d/%m/%Y") %></td>
-        <td><%= p.turmas.count %></td>
+        <td><%= p.turmas.size %></td>
         <td class="actions">
           <%= link_to "Ver",    professor_path(p), class: "btn btn-secondary btn-sm" %>
           <%= link_to "Editar", edit_professor_path(p), class: "btn btn-primary btn-sm" %>

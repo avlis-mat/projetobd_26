@@ -9,4 +9,16 @@ class Turma < ApplicationRecord
     has_many :admin_turmas,     foreign_key: :idturma,   class_name: "AdminTurma"
     has_many :admins,           through: :admin_turmas
     has_many :formularios,      foreign_key: :idturma,   class_name: "Formulario"
+
+    before_destroy :verificar_formularios
+
+     private
+
+    def verificar_formularios
+        if formularios.exists?
+            errors.add(:base, "Não é possível excluir uma turma que possui formulários associados.")
+            throw :abort
+        end
+    end
+
 end

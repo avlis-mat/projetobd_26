@@ -73,11 +73,16 @@ rescue ActiveRecord::RecordInvalid => e
 
   # DELETE /usuarios/1 or /usuarios/1.json
   def destroy
-    @usuario.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to usuarios_path, notice: "Usuario removido com sucesso!", status: :see_other }
-      format.json { head :no_content }
+    if @ususario.destroy
+      respond_to do |format|
+        format.html { redirect_to usuarios_path, notice: "Usuario removido com sucesso!", status: :see_other }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to usuarios_path, alert: @usuario.errors.full_messages.to_sentence, status: :see_other }
+        format.json { render json: @usuario.errors, status: :unprocessable_content }
+      end
     end
   end
 

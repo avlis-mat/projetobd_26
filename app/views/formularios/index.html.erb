@@ -16,11 +16,19 @@
         <td><%= f.data_inicio&.strftime("%d/%m/%Y") %></td>
         <td><%= f.data_fim&.strftime("%d/%m/%Y") %></td>
         <td class="actions">
-          <%= link_to "Ver",    formulario_path(f), class: "btn btn-secondary btn-sm" %>
-          <%= link_to "Editar", edit_formulario_path(f), class: "btn btn-primary btn-sm" %>
-          <%= link_to "Excluir", formulario_path(f),
-              data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
-              class: "btn btn-danger btn-sm" %>
+          <%= link_to "Ver", formulario_path(f), class: "btn btn-secondary btn-sm" %>
+
+          <% if current_tipo == :aluno && f.status == "aberto" %>
+            <%= link_to " Responder", responder_formulario_path(f),
+                class: "btn btn-success btn-sm" %>
+          <% end %>
+
+          <% if [:admin, :professor].include?(current_tipo) %>
+            <%= link_to "Editar", edit_formulario_path(f), class: "btn btn-primary btn-sm" %>
+            <%= link_to "Excluir", formulario_path(f),
+                data: { "turbo-method": "delete", "turbo-confirm": "Confirma exclusão?" },
+                class: "btn btn-danger btn-sm" %>
+          <% end %>
         </td>
       </tr>
     <% end %>

@@ -8,6 +8,8 @@ class Questao < ApplicationRecord
     has_many :modelos,         through: :modelo_questaos
     has_many :respostas,       foreign_key: :idquestao, class_name: "Respostum"
 
+    before_destroy :verificar_respostas
+
     private
 
     def definir_timestamps
@@ -17,5 +19,12 @@ class Questao < ApplicationRecord
 
     def atualizar_timestamp
         self.atualizado_em = Time.now
+    end
+
+    def verificar_respostas
+        if respostas.exists?
+            errors.add(:base, "Não é possível excluir a questão, pois existem respostas associadas a ela.")
+            throw(:abort)
+        end
     end
 end

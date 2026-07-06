@@ -3,7 +3,7 @@ class ProfessorsController < ApplicationController
 
   
   def index
-    @professors = Professor.includes(:usuario).all
+    @professors = Professor.includes(:usuario, :turmas).all
   end
 
   

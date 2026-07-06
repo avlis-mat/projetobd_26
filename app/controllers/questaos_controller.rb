@@ -49,11 +49,16 @@ class QuestaosController < ApplicationController
 
   # DELETE /questaos/1 or /questaos/1.json
   def destroy
-    @questao.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to questaos_path, notice: "Questao removida com sucesso!", status: :see_other }
-      format.json { head :no_content }
+    if @questao.destroy
+      respond_to do |format|
+        format.html { redirect_to questaos_path, notice: "Questao removida com sucesso!", status: :see_other }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to questaos_path, alert: @questao.errors.full_messages.to_sentence, status: :see_other }
+        format.json { render json: @questao.errors, status: :unprocessable_content }
+      end
     end
   end
 

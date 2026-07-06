@@ -86,15 +86,31 @@
       <a class="brand" href="<%= root_path %>">🎓 Avaliação Acadêmica UnB</a>
       <div class="nav-links">
         <% if current_usuario %>
-          <%= link_to "Painel",        root_path %>
-          <%= link_to "Turmas",        turmas_path %>
-          <%= link_to "Formulários",   formularios_path %>
-          <%= link_to "Usuários",      usuarios_path %>
-          <%= link_to "Departamentos", departamentos_path %>
-          <%= link_to "Matérias",      materia_path %>
-          <%= link_to "Modelos",       modelos_path %>
-          <%= link_to "Questões",      questaos_path %>
-          <%= link_to "Respostas",     resposta_path %>
+          <%= link_to " Dashboard", root_path %>
+          <%= link_to "Turmas", turmas_path %>
+          <%= link_to "Formulários", formularios_path %>
+          <%= link_to "Matérias", materia_path %>
+
+          <%# Links só para admin e professor %>
+          <% if [:admin, :professor].include?(current_tipo) %>
+            <%= link_to "Modelos", modelos_path %>
+            <%= link_to "Questões", questaos_path %>
+          <% end %>
+
+          <%# Links só para admin %>
+          <% if current_tipo == :admin %>
+            <%= link_to "Usuários", usuarios_path %>
+            <%= link_to "Departamentos", departamentos_path %>
+            <%= link_to "Admins", admins_path %>
+            <%= link_to "Professores", professors_path %>
+            <%= link_to "Alunos", alunos_path %>
+          <% end %>
+
+          <% if current_tipo == :aluno %>
+            <%= link_to " Minhas Respostas", minhas_respostas_resposta_path %>
+          <% end %>
+
+          <%= link_to "Respostas", resposta_path %>
         <% end %>
       </div>
       <div class="nav-user">
