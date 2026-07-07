@@ -1,5 +1,7 @@
 class ModelosController < ApplicationController
   before_action :set_modelo, only: %i[ show edit update destroy ]
+  before_action :require_admin_ou_professor, only: %i[new create edit update destroy]
+  before_action :verificar_dono, only: %i[ edit update destroy ]
 
   # GET /modelos or /modelos.json
   def index
@@ -28,6 +30,7 @@ class ModelosController < ApplicationController
   # POST /modelos or /modelos.json
   def create
     @modelo = Modelo.new(modelo_params)
+    @modelo.idusuario = current_usuario.id
 
     if @modelo.save
       # Associa questões selecionadas ao modelo
@@ -87,6 +90,12 @@ rescue ActiveRecord::RecordNotDestroyed => e
 
     # Only allow a list of trusted parameters through.
     def modelo_params
-      params.expect(modelo: [ :nome, :descricao, :versao, :status, :criado_em, :atualizado_em, :idusuario ])
+      params.expect(modelo: [ :nome, :descricao, :versao, :status, :criado_em, :atualizado_em ])
+    end
+
+    def verificar_dono
+      unless current_tipo == :admin || @modelo.idusuario == current_usuario.id
+        redirect_to modelos_path, alert: "Você não tem permissão para acessar este modelo."
+      end
     end
 end

@@ -9,6 +9,49 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: atualizar_status_resposta(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.atualizar_status_resposta() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NEW.respondido_em = NOW();
+  RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: atualizar_timestamp(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.atualizar_timestamp() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NEW.atualizado_em = NOW();
+  RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: encerrar_formularios_vencidos(); Type: PROCEDURE; Schema: public; Owner: -
+--
+
+CREATE PROCEDURE public.encerrar_formularios_vencidos()
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  UPDATE public.formulario
+  SET status = 'encerrado'
+  WHERE data_fim < CURRENT_DATE AND status != 'encerrado';
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -344,7 +387,8 @@ CREATE TABLE public.questao (
     versao character varying,
     atualizado_em timestamp without time zone,
     status character varying,
-    criado_em timestamp without time zone
+    criado_em timestamp without time zone,
+    idusuario integer
 );
 
 
@@ -764,6 +808,27 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 
 
 --
+-- Name: modelo trg_modelo_atualizado_em; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_modelo_atualizado_em BEFORE UPDATE ON public.modelo FOR EACH ROW EXECUTE FUNCTION public.atualizar_timestamp();
+
+
+--
+-- Name: questao trg_questao_atualizado_em; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_questao_atualizado_em BEFORE UPDATE ON public.questao FOR EACH ROW EXECUTE FUNCTION public.atualizar_timestamp();
+
+
+--
+-- Name: resposta trg_respondido_em; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_respondido_em BEFORE INSERT ON public.resposta FOR EACH ROW EXECUTE FUNCTION public.atualizar_status_resposta();
+
+
+--
 -- Name: admin admin_idusuario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -809,6 +874,14 @@ ALTER TABLE ONLY public.aluno_turma
 
 ALTER TABLE ONLY public.aluno_turma
     ADD CONSTRAINT aluno_turma_idturma_fkey FOREIGN KEY (idturma) REFERENCES public.turma(id);
+
+
+--
+-- Name: questao fk_rails_38e894f928; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.questao
+    ADD CONSTRAINT fk_rails_38e894f928 FOREIGN KEY (idusuario) REFERENCES public.usuario(id);
 
 
 --
@@ -954,5 +1027,6 @@ ALTER TABLE ONLY public.usuario
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260706234910'),
 ('20260704234942');
 

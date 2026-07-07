@@ -8,8 +8,11 @@
     <%= f.select :status, ["aberto", "encerrado", "rascunho"], { prompt: "Selecione" } %>
   </div>
   <div class="form-group">
-    <%= f.label :idusuario, "Criado por" %>
-    <%= f.select :idusuario, Usuario.all.map { |u| [u.nome, u.id] }, { prompt: "Selecione" } %>
+    <label>Criado por</label>
+    <p style="padding: 8px 12px; background: #f4f6f9; border-radius: 5px;
+              border: 1px solid #ccc; font-size: 14px; color: #555;">
+      <%= current_usuario.nome %>
+    </p>
   </div>
   <div class="form-group">
     <%= f.label :idturma, "Turma" %>

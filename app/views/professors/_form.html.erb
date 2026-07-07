@@ -2,19 +2,19 @@
   <h2>Dados do Usuário</h2>
   <div class="form-group">
     <label>Nome</label>
-    <input type="text" name="nome" value="<%= professor.usuario&.nome %>">
+    <input type="text" name="usuario[nome]" value="<%= professor.usuario&.nome %>">
   </div>
   <div class="form-group">
     <label>Email</label>
-    <input type="email" name="email" value="<%= professor.usuario&.email %>">
+    <input type="email" name="usuario[email]" value="<%= professor.usuario&.email %>">
   </div>
   <div class="form-group">
     <label>Senha</label>
-    <input type="password" name="senha">
+    <input type="password" name="usuario[senha]">
   </div>
   <div class="form-group">
     <label>Departamento</label>
-    <select name="iddepartamento">
+    <select name="usuario[iddepartamento]">
       <option value="">Selecione</option>
       <% Departamento.all.each do |d| %>
         <option value="<%= d.codigo %>"

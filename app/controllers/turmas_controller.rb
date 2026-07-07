@@ -1,7 +1,8 @@
 class TurmasController < ApplicationController
-  before_action :set_turma, only: %i[ show edit update destroy ]
-  before_action :require_admin_ou_professor, only: %i[new create edit update destroy]
-
+  before_action :set_turma, only: %i[ show edit update destroy gerenciar_alunos adicionar_aluno remover_aluno gerenciar_professores adicionar_professor remover_professor ]
+  before_action :require_admin_ou_professor, only: %i[new create edit update destroy gerenciar_alunos adicionar_aluno remover_aluno ]
+  before_action :require_admin, only: %i[ gerenciar_professores adicionar_professor remover_professor ]
+  before_action :verificar_professor_da_turma, only: %i[ edit update destroy gerenciar_alunos adicionar_aluno remover_aluno ]
 
   # GET /turmas or /turmas.json
   def index
@@ -84,6 +85,83 @@ class TurmasController < ApplicationController
     end
   end
 
+  def gerenciar_alunos
+    if current_tipo == :professor
+      unless current_professor.turmas.include?(@turma)
+        redirect_to turmas_path, alert: "Você não tem acesso a esta turma."
+        return
+      end
+    end
+
+    @alunos_na_turma = @turma.alunos.includes(:usuario)
+    @alunos_fora_da_turma = Aluno.includes(:usuario).where.not(idusuario: @alunos_na_turma.pluck(:idusuario))
+
+  end
+
+
+
+  def adicionar_aluno
+    if current_tipo == :professor
+      unless current_professor.turmas.include?(@turma)
+        redirect_to turmas_path, alert: "Você não leciona nesta turma."
+        return
+      end
+    end
+
+    aluno = Aluno.find(params[:aluno_id])
+
+    if AlunoTurma.exists?(idturma: @turma.id, idaluno: aluno.idusuario)
+      redirect_to gerenciar_alunos_turma_path(@turma),
+        alert: "Aluno já está nesta turma."
+    else
+      AlunoTurma.create!(idturma: @turma.id, idaluno: aluno.idusuario)
+      redirect_to gerenciar_alunos_turma_path(@turma),
+        notice: "#{aluno.usuario&.nome} adicionado à turma com sucesso!"
+    end
+  end
+
+  def remover_aluno
+    if current_tipo == :professor
+      unless current_professor.turmas.include?(@turma)
+        redirect_to turmas_path, alert: "Você não leciona nesta turma."
+        return
+      end
+    end
+
+    aluno = Aluno.find(params[:aluno_id])
+    AlunoTurma.where(idturma: @turma.id, idaluno: aluno.idusuario).delete_all
+
+    redirect_to gerenciar_alunos_turma_path(@turma),
+      notice: "#{aluno.usuario&.nome} removido da turma."
+  end
+
+  def gerenciar_professores
+    @professores_na_turma = @turma.professors.includes(:usuario)
+    @professores_fora_da_turma     = Professor.includes(:usuario)
+                                    .where.not(idusuario: @professores_na_turma.pluck(:idusuario))
+  end
+
+  def adicionar_professor
+    professor = Professor.find(params[:professor_id])
+
+    if ProfessorTurma.exists?(idturma: @turma.id, idprofessor: professor.idusuario)
+      redirect_to gerenciar_professores_turma_path(@turma),
+        alert: "Professor já está vinculado a esta turma."
+    else
+      ProfessorTurma.create!(idturma: @turma.id, idprofessor: professor.idusuario)
+      redirect_to gerenciar_professores_turma_path(@turma),
+        notice: "#{professor.usuario&.nome} vinculado à turma com sucesso!"
+    end
+  end
+
+  def remover_professor
+    professor = Professor.find(params[:professor_id])
+    ProfessorTurma.where(idturma: @turma.id, idprofessor: professor.idusuario).delete_all
+
+    redirect_to gerenciar_professores_turma_path(@turma),
+      notice: "#{professor.usuario&.nome} removido da turma."
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_turma
@@ -94,4 +172,12 @@ class TurmasController < ApplicationController
     def turma_params
       params.expect(turma: [ :turno, :horario, :codigo, :idmateria ])
     end
+
+    def verificar_professor_da_turma
+      return if current_tipo == :admin
+      unless current_professor.turmas.include?(@turma)
+        redirect_to turmas_path, alert: "Você não leciona nesta turma."
+      end
+    end
+    
 end

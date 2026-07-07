@@ -25,6 +25,17 @@ resources :resposta, controller: "resposta" do
   end
 end
 
+resources :turmas do
+  member do
+    get :gerenciar_alunos
+    post :adicionar_aluno
+    delete :remover_aluno
+    get :gerenciar_professores
+    post :adicionar_professor
+    delete :remover_professor
+  end
+end
+
   # Recursos principais
   resources :resposta
   resources :admins

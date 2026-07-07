@@ -13,12 +13,14 @@ class AlunosController < ApplicationController
   # GET /alunos/new
   def new
     @aluno = Aluno.new
-    @usuario - Usuario.new
+    @usuario = Usuario.new
+    @departamentos = Departamento.all
   end
 
   # GET /alunos/1/edit
   def edit
     @usuario = @aluno.usuario
+    @departamentos = Departamento.all
   end
 
 
@@ -34,7 +36,9 @@ class AlunosController < ApplicationController
 
     redirect_to alunos_path, notice: "Aluno criado com sucesso!"
     rescue ActiveRecord::RecordInvalid => e
+    @departamentos = Departamento.all
     @usuario ||= Usuario.new
+    @aluno ||= Aluno.new
     flash.now[:alert] = "Erro ao criar aluno: #{e.message}"
     render :new, status: :unprocessable_entity
   end
@@ -48,6 +52,7 @@ class AlunosController < ApplicationController
 
     redirect_to alunos_path, notice: "Aluno atualizado com sucesso!"
     rescue ActiveRecord::RecordInvalid => e
+    @departamentos = Departamento.all
     flash.now[:alert] = "Erro ao atualizar: #{e.message}"
     render :edit, status: :unprocessable_entity
   end
@@ -60,7 +65,9 @@ class AlunosController < ApplicationController
       usuario.destroy!
     end
 
-    redirect_to alunos_path, notice: "Aluno removido com sucesso!"
+    redirect_to alunos_path, notice: "Aluno removido com sucesso!", status: :see_other
+    rescue ActiveRecord::RecordInvalid => e
+    redirect_to alunos_path, alert: "Erro ao remover: #{e.message}"
   end
 
   private

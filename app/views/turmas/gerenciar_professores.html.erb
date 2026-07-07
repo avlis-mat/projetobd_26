@@ -1,0 +1,45 @@
+<div class="page-header">
+  <h1>Gerenciar Professores — Turma <%= @turma.codigo %></h1>
+  <%= link_to "Voltar", turma_path(@turma), class: "btn btn-secondary" %>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+  <div class="card">
+    <h2 style="margin-bottom: 16px;">Professores na turma</h2>
+    <% if @professores_na_turma.any? %>
+      <% @professores_na_turma.each do |prof| %>
+        <div style="display:flex; justify-content:space-between; align-items:center;
+                    padding: 8px 0; border-bottom: 1px solid #eee;">
+          <strong><%= prof.usuario&.nome %></strong>
+          <%= button_to "Remover",
+              remover_professor_turma_path(@turma, professor_id: prof.idusuario),
+              method: :delete,
+              data: { turbo_confirm: "Remover #{prof.usuario&.nome} da turma?" },
+              class: "btn btn-danger btn-sm" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="color:#888;">Nenhum professor vinculado.</p>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-bottom: 16px;">Adicionar professor</h2>
+    <% if @professores_fora_da_turma.any? %>
+      <% @professores_fora_da_turma.each do |prof| %>
+        <div style="display:flex; justify-content:space-between; align-items:center;
+                    padding: 8px 0; border-bottom: 1px solid #eee;">
+          <strong><%= prof.usuario&.nome %></strong>
+          <%= button_to "Adicionar",
+              adicionar_professor_turma_path(@turma, professor_id: prof.idusuario),
+              method: :post,
+              class: "btn btn-success btn-sm" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="color:#888;">Todos os professores já estão vinculados.</p>
+    <% end %>
+  </div>
+
+</div>

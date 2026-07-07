@@ -1,18 +1,52 @@
 <div class="page-header">
-  <h1>Turma #<%= @turma.id %></h1>
+  <h1>Turma <%= @turma.codigo %> — <%= @turma.materia&.nome %></h1>
   <div class="actions">
-    <%= link_to "Editar", edit_turma_path(@turma), class: "btn btn-primary" %>
+    <% if [:admin, :professor].include?(current_tipo) %>
+      <%= link_to " Gerenciar Alunos",
+          gerenciar_alunos_turma_path(@turma), class: "btn btn-primary" %>
+    <% end %>
+    <% if current_tipo == :admin %>
+      <%= link_to " Gerenciar Professores",
+          gerenciar_professores_turma_path(@turma), class: "btn btn-primary" %>
+      <%= link_to "Editar", edit_turma_path(@turma), class: "btn btn-secondary" %>
+    <% end %>
     <%= link_to "Voltar", turmas_path, class: "btn btn-secondary" %>
   </div>
 </div>
+
 <div class="card">
   <%= render @turma %>
-  <h2 style="margin-top:20px;">Professores</h2>
-  <% @professors.each do |p| %>
-    <p><%= p.usuario&.nome %></p>
+
+  <h2 style="margin-top: 20px;">Professores</h2>
+  <% if @professors.any? %>
+    <% @professors.each do |p| %>
+      <p><%= p.usuario&.nome %></p>
+    <% end %>
+  <% else %>
+    <p style="color:#888;">Nenhum professor vinculado.</p>
   <% end %>
-  <h2 style="margin-top:20px;">Alunos</h2>
-  <% @alunos.each do |a| %>
-    <p><%= a.usuario&.nome %></p>
+
+  <h2 style="margin-top: 20px;">Alunos (<%= @alunos.count %>)</h2>
+  <% if @alunos.any? %>
+    <% @alunos.each do |a| %>
+      <p><%= a.usuario&.nome %> — <%= a.matricula %></p>
+    <% end %>
+  <% else %>
+    <p style="color:#888;">Nenhum aluno matriculado.</p>
+  <% end %>
+
+  <h2 style="margin-top: 20px;">Formulários</h2>
+  <% if @formularios.any? %>
+    <% @formularios.each do |f| %>
+      <p>
+        <%= f.titulo %>
+        <span style="color:#888; font-size:12px;">(até <%= f.data_fim&.strftime("%d/%m/%Y") %>)</span>
+        <% if current_tipo == :aluno && f.status == "aberto" %>
+          <%= link_to "Responder", responder_formulario_path(f), class: "btn btn-success btn-sm" %>
+        <% end %>
+      </p>
+    <% end %>
+  <% else %>
+    <p style="color:#888;">Nenhum formulário disponível.</p>
   <% end %>
 </div>

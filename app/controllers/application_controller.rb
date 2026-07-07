@@ -40,6 +40,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_professor
+    @current_professor ||= Professor.find_by(idusuario: session[:usuario_id])
+  end
+  helper_method :current_professor
+
   def require_admin
     unless current_tipo == :admin
       redirect_to root_path, alert: "Acesso negado. Apenas administradores podem acessar esta página."

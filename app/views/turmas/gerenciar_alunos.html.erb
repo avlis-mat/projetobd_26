@@ -1,0 +1,65 @@
+<div class="page-header">
+  <h1>Gerenciar Alunos — Turma <%= @turma.codigo %></h1>
+  <%= link_to "Voltar", turma_path(@turma), class: "btn btn-secondary" %>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+  <%# Alunos na turma %>
+  <div class="card">
+    <h2 style="margin-bottom: 16px;">
+      Alunos na turma
+      <span style="background:#1a3a5c; color:white; border-radius:12px;
+                   padding:2px 10px; font-size:13px;">
+        <%= @alunos_na_turma.count %>
+      </span>
+    </h2>
+
+    <% if @alunos_na_turma.any? %>
+      <% @alunos_na_turma.each do |aluno| %>
+        <div style="display:flex; justify-content:space-between; align-items:center;
+                    padding: 8px 0; border-bottom: 1px solid #eee;">
+          <div>
+            <strong><%= aluno.usuario&.nome %></strong>
+            <span style="color:#888; font-size:12px; margin-left:8px;">
+              <%= aluno.matricula %>
+            </span>
+          </div>
+          <%= button_to "Remover",
+              remover_aluno_turma_path(@turma, aluno_id: aluno.idusuario),
+              method: :delete,
+              data: { turbo_confirm: "Remover #{aluno.usuario&.nome} da turma?" },
+              class: "btn btn-danger btn-sm" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="color:#888;">Nenhum aluno cadastrado nesta turma.</p>
+    <% end %>
+  </div>
+
+  <%# Alunos disponíveis %>
+  <div class="card">
+    <h2 style="margin-bottom: 16px;">Adicionar aluno</h2>
+
+    <% if @alunos_fora_da_turma.any? %>
+      <% @alunos_fora_da_turma.each do |aluno| %>
+        <div style="display:flex; justify-content:space-between; align-items:center;
+                    padding: 8px 0; border-bottom: 1px solid #eee;">
+          <div>
+            <strong><%= aluno.usuario&.nome %></strong>
+            <span style="color:#888; font-size:12px; margin-left:8px;">
+              <%= aluno.matricula %>
+            </span>
+          </div>
+          <%= button_to "Adicionar",
+              adicionar_aluno_turma_path(@turma, aluno_id: aluno.idusuario),
+              method: :post,
+              class: "btn btn-success btn-sm" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="color:#888;">Todos os alunos já estão nesta turma.</p>
+    <% end %>
+  </div>
+
+</div>

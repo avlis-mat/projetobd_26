@@ -1,6 +1,7 @@
 class FormulariosController < ApplicationController
   before_action :set_formulario, only: %i[ show edit update destroy responder enviar_respostas ]
   before_action :require_admin_ou_professor, only: %i[new create edit update destroy]
+  before_action :verificar_dono, only: %i[ edit update destroy ]
 
   
   def index
@@ -41,6 +42,7 @@ class FormulariosController < ApplicationController
   
   def create
     @formulario = Formulario.new(formulario_params)
+    @formulario.idusuario = current_usuario.id
     # @formulario.arquivo.attach(params[:formulario][:arquivo]) if params[:formulario][:arquivo].present?
 
     if @formulario.save
@@ -157,8 +159,13 @@ end
     # Only allow a list of trusted parameters through.
     def formulario_params
       params.require(:formulario).permit(:titulo, :status, :data_inicio, :data_fim,
-                                        :criado_em, :instrucoes, :destinatario,
-                                        :idusuario, :idturma, :idmodelo, 
-                                        :arquivo)
+                                        :criado_em, :instrucoes, :destinatario, 
+                                        :idturma, :idmodelo, :arquivo)
+    end
+
+    def verificar_dono
+      unless current_tipo == :admin || @formulario.idusuario == current_usuario.id
+        redirect_to formularios_path, alert: "Você só pode editar ou excluir formulários que criou."
+      end
     end
 end

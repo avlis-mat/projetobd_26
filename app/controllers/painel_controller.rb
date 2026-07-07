@@ -2,16 +2,7 @@ class PainelController < ApplicationController
   def index
     if current_tipo == :aluno
       # Dashboard simplificado para aluno
-      @vw_formularios = ActiveRecord::Base.connection.execute(
-        "SELECT * FROM vw_formularios_turma WHERE turma_id IN (#{current_aluno.turmas.pluck(:id).join(',')}) ORDER BY turma_id"
-      )
-      @ultimas_respostas = Respostum
-        .includes(:questao, :formulario, :aluno => :usuario)
-        .where(idaluno: current_aluno.idusuario)
-        .order(respondido_em: :desc)
-        .limit(5)
-      @questoes_recentes = []
-      @formularios_vencidos = []
+      redirect_to turmas_path
     else
       @vw_formularios = ActiveRecord::Base.connection.execute(
         "SELECT * FROM vw_formularios_turma ORDER BY turma_id"

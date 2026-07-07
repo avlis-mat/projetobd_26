@@ -1,5 +1,7 @@
 class QuestaosController < ApplicationController
   before_action :set_questao, only: %i[ show edit update destroy ]
+  before_action :verificar_dono, only: %i[ edit update destroy ]
+  before_action :require_admin_ou_professor, only: %i[new create edit update destroy]
 
   # GET /questaos or /questaos.json
   def index
@@ -22,6 +24,8 @@ class QuestaosController < ApplicationController
   # POST /questaos or /questaos.json
   def create
     @questao = Questao.new(questao_params)
+    @questao.idusuario = current_usuario.id
+    # @questao.criado_em = Time.now
 
     respond_to do |format|
       if @questao.save
@@ -70,6 +74,12 @@ class QuestaosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def questao_params
-      params.expect(questao: [ :enunciado, :versao, :status, :criado_em, :atualizado_em ])
+      params.expect(questao: [ :enunciado, :versao, :status ])
+    end
+
+    def verificar_dono
+      unless current_tipo == :admin || @questao.idusuario == current_usuario.id
+        redirect_to questaos_path, alert: "Você só pode editar ou excluir questões que criou."
+      end
     end
 end
