@@ -5,5 +5,5 @@ class Aluno < ApplicationRecord
     belongs_to :usuario, foreign_key: "idusuario", class_name: "Usuario"
     has_many :aluno_turmas, foreign_key: "idaluno", class_name: "AlunoTurma"
     has_many :turmas, through: :aluno_turmas
-    has_many :respostas, foreign_key: "idaluno", class_name: "Resposta"
+    has_many :respostas, foreign_key: "idaluno", class_name: "Respostum"
 end

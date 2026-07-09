@@ -73,7 +73,7 @@ rescue ActiveRecord::RecordInvalid => e
 
   # DELETE /usuarios/1 or /usuarios/1.json
   def destroy
-    if @ususario.destroy
+    if @usuario.destroy
       respond_to do |format|
         format.html { redirect_to usuarios_path, notice: "Usuario removido com sucesso!", status: :see_other }
         format.json { head :no_content }
