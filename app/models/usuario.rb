@@ -10,16 +10,31 @@ class Usuario < ApplicationRecord
 
     before_destroy :verificar_dependentes
 
-    private
-
     def verificar_dependentes
-        if aluno&.respostas&.exists?
-            errors.add(:base, "Não é possível excluir um usuário que possui respostas associadas.")
-            throw :abort
+        if aluno.present?
+            if AlunoTurma.exists?(idaluno: aluno.idusuario)
+            errors.add(:base, "Aluno está vinculado a turmas.")
+            end
+            if Respostum.exists?(idaluno: aluno.idusuario)
+            errors.add(:base, "Aluno possui respostas enviadas.")
+            end
         end
-        if professor&.formularios&.exists?
-            errors.add(:base, "Não é possível excluir um usuário que possui formulários associados.")
-            throw :abort
+
+        if professor.present?
+            if ProfessorTurma.exists?(idprofessor: professor.idusuario)
+            errors.add(:base, "Professor está vinculado a turmas.")
+            end
+            if Formulario.exists?(idusuario: id)
+            errors.add(:base, "Professor possui formulários criados.")
+            end
+            if Modelo.exists?(idusuario: id)
+            errors.add(:base, "Professor possui modelos criados.")
+            end
+            if Questao.exists?(idusuario: id)
+            errors.add(:base, "Professor possui questões criadas.")
+            end
         end
+
+        throw :abort if errors.any?
     end
 end

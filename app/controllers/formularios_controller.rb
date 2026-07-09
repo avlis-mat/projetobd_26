@@ -1,5 +1,5 @@
 class FormulariosController < ApplicationController
-  before_action :set_formulario, only: %i[ show edit update destroy responder enviar_respostas ]
+  before_action :set_formulario, only: %i[ show edit update destroy responder enviar_respostas download_anexo ]
   before_action :require_admin_ou_professor, only: %i[new create edit update destroy]
   before_action :verificar_dono, only: %i[ edit update destroy ]
 
@@ -44,6 +44,8 @@ class FormulariosController < ApplicationController
     @formulario = Formulario.new(formulario_params)
     @formulario.idusuario = current_usuario.id
     # @formulario.arquivo.attach(params[:formulario][:arquivo]) if params[:formulario][:arquivo].present?
+    
+    salvar_anexo_binario(@formulario)
 
     if @formulario.save
       redirect_to formularios_path, notice: "Formulário criado com sucesso!"
@@ -58,6 +60,8 @@ class FormulariosController < ApplicationController
   
   def update
     # @formulario.arquivo.attach(params[:formulario][:arquivo]) if params[:formulario][:arquivo].present?
+
+    salvar_anexo_binario(@formulario)
 
     if @formulario.update(formulario_params)
       redirect_to formularios_path, notice: "Formulário atualizado com sucesso!"
@@ -150,6 +154,17 @@ rescue ActiveRecord::RecordInvalid => e
     alert: "Erro ao salvar: #{e.message}"
 end
 
+  def download_anexo
+    if @formulario.anexo_binario.present?
+      send_data @formulario.anexo_binario, 
+        filename: @formulario.anexo_binario_nome, 
+        type: @formulario.anexo_binario_tipo,
+        disposition: 'inline' # ou 'attachment' para forçar download
+    else
+      redirect_to formularios_path, alert: "Anexo não encontrado."
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_formulario
@@ -167,5 +182,14 @@ end
       unless current_tipo == :admin || @formulario.idusuario == current_usuario.id
         redirect_to formularios_path, alert: "Você só pode editar ou excluir formulários que criou."
       end
+    end
+
+    def salvar_anexo_binario(formulario)
+      upload = params[:formulario][:anexo_upload]
+      return if upload.blank?
+
+      formulario.anexo_binario      = upload.read
+      formulario.anexo_binario_nome = upload.original_filename
+      formulario.anexo_binario_tipo = upload.content_type
     end
 end

@@ -8,6 +8,7 @@ class AlunosController < ApplicationController
 
   # GET /alunos/1 or /alunos/1.json
   def show
+    @turmas = @aluno.turmas.includes(:materia)
   end
 
   # GET /alunos/new
@@ -60,14 +61,23 @@ class AlunosController < ApplicationController
 
   def destroy
     ActiveRecord::Base.transaction do
-      usuario = @aluno.usuario
-      @aluno.destroy!
-      usuario.destroy!
+      usuario = @aluno.usuario  # ajuste para cada controller
+      if @aluno.destroy
+        usuario.destroy!
+      else
+        raise ActiveRecord::Rollback
+      end
     end
 
-    redirect_to alunos_path, notice: "Aluno removido com sucesso!", status: :see_other
-    rescue ActiveRecord::RecordInvalid => e
-    redirect_to alunos_path, alert: "Erro ao remover: #{e.message}"
+    if @aluno.errors.any?
+      redirect_to alunos_path,
+        alert: @aluno.errors.full_messages.to_sentence,
+        status: :see_other
+    else
+      redirect_to alunos_path,
+        notice: "Aluno removido com sucesso!",
+        status: :see_other
+    end
   end
 
   private

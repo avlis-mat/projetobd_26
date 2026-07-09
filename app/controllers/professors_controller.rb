@@ -55,12 +55,23 @@ class ProfessorsController < ApplicationController
   # DELETE /professors/1 or /professors/1.json
   def destroy
     ActiveRecord::Base.transaction do
-      usuario = @professor.usuario
-      @professor.destroy!
-      usuario.destroy!
+      usuario = @professor.usuario  # ajuste para cada controller
+      if @professor.destroy
+        usuario.destroy!
+      else
+        raise ActiveRecord::Rollback
+      end
     end
 
-    redirect_to professors_path, notice: "Professor removido com sucesso!"
+    if @professor.errors.any?
+      redirect_to professors_path,
+        alert: @professor.errors.full_messages.to_sentence,
+        status: :see_other
+    else
+      redirect_to professors_path,
+        notice: "Professor removido com sucesso!",
+        status: :see_other
+    end
   end
 
   private
