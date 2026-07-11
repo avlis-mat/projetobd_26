@@ -16,7 +16,7 @@
   </div>
   <div class="form-group">
     <%= f.label :idturma, "Turma" %>
-    <%= f.select :idturma, Turma.all.map { |t| ["Turma #{t.codigo} — #{t.materia&.nome}", t.id] }, { prompt: "Selecione" } %>
+    <%= f.select :idturma, @turmas.map { |t| ["Turma #{t.codigo} — #{t.materia&.nome}", t.id] }, { prompt: "Selecione" } %>
   </div>
   <div class="form-group">
     <%= f.label :idmodelo, "Modelo" %>

@@ -28,14 +28,14 @@ class FormulariosController < ApplicationController
   def new
     @formulario = Formulario.new
     @usuarios = Usuario.all
-    @turmas = Turma.all
+    @turmas = Turma.includes(:materia).all
     @modelos = Modelo.all
   end
 
   
   def edit
     @usuarios = Usuario.all
-    @turmas = Turma.all
+    @turmas = Turma.includes(:materia).all
     @modelos = Modelo.all
   end
 
