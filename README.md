@@ -285,14 +285,13 @@ projetobd_26/
 
 ## 🤖 Indicação de Uso de Inteligência Artificial
 
-A IA Generativa (Claude — Anthropic) foi utilizada extensivamente neste projeto como ferramenta de apoio ao desenvolvimento, incluindo:
+A IA Generativa (Claude — Anthropic) foi utilizada neste projeto como ferramenta de apoio, incluindo:
 
-- Geração e revisão do script SQL do banco de dados
-- Desenvolvimento dos models, controllers e views em Ruby on Rails
-- Correção de erros e depuração de código
-- Implementação dos recursos avançados do banco (view, procedure, triggers)
-- Configuração do ambiente de desenvolvimento (WSL2, PostgreSQL, Rails)
-- Criação do sistema de autenticação e controle de acesso por perfil
+- Utilização como base do script SQL elaborado pelo grupo para estruturação do projeto
+- Apoio ao desenvolvimento dos models, controllers e views em Ruby on Rails
+- Apoio na correção de erros e depuração de código
+- Apoio à implementação dos recursos do banco (view, procedure, triggers) utilizando PostgreSql
+- Apoio em dúvidas relacionadas ao ambiente de desenvolvimento (WSL2, PostgreSQL, Rails)
 - Otimização de queries (eliminação de N+1)
 - Elaboração deste README
 
