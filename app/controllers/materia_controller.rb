@@ -16,6 +16,7 @@ class MateriaController < ApplicationController
 
   # GET /materia/1 or /materia/1.json
   def show
+    @turmas = @materium.turmas.includes(:professors => :usuario, :alunos => :usuario)
   end
 
   # GET /materia/new

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   member do
     get  :responder      # exibe as questões para responder
     post :enviar_respostas  # salva todas as respostas de uma vez
+    get :download_anexo  # baixa o anexo binário do formulário
   end
 end
 

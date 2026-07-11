@@ -5,4 +5,35 @@
     <%= link_to "Voltar", materia_path, class: "btn btn-secondary" %>
   </div>
 </div>
-<div class="card"><%= render @materium %></div>
+<div class="card">
+  <%= render @materium %>
+
+  <h2 style="margin-top: 20px;">Turmas</h2>
+  <% if @turmas.any? %>
+    <% @turmas.each do |t| %>
+      <div style="padding: 12px 0; border-bottom: 1px solid #eee;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong>Turma <%= t.codigo %></strong>
+          <span style="color:#888; font-size:13px;">
+            <%= t.turno %> | <%= t.horario %>
+          </span>
+          <%= link_to "Ver", turma_path(t), class: "btn btn-secondary btn-sm" %>
+        </div>
+
+        <div style="margin-top: 8px; padding-left: 12px; font-size: 13px; color: #555;">
+          <% if t.professors.any? %>
+            <span>👨‍🏫 <%= t.professors.map { |p| p.usuario&.nome }.join(", ") %></span>
+          <% else %>
+            <span style="color:#aaa;">Sem professor vinculado</span>
+          <% end %>
+
+          <span style="margin-left: 16px;">
+            👥 <%= t.alunos.count %> aluno(s)
+          </span>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p style="color:#888; margin-top:8px;">Nenhuma turma associada a esta matéria.</p>
+  <% end %>
+</div>

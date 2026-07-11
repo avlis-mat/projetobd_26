@@ -14,4 +14,12 @@
           class: "btn btn-secondary btn-sm" %>
     </div>
   <% end %>
+  <% if @formulario.anexo_binario.present? %>
+  <div class="detail-row">
+    <span class="detail-label">Anexo:</span>
+    <%= link_to " #{@formulario.anexo_binario_nome}",
+        download_anexo_formulario_path(@formulario),
+        target: "_blank", class: "btn btn-secondary btn-sm" %>
+  </div>
+<% end %>
 </div>

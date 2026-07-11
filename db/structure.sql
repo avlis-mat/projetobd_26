@@ -254,7 +254,10 @@ CREATE TABLE public.formulario (
     instrucoes character varying,
     destinatario character varying,
     idusuario integer,
-    idturma integer
+    idturma integer,
+    anexo_binario bytea,
+    anexo_binario_nome character varying,
+    anexo_binario_tipo character varying
 );
 
 
@@ -1027,6 +1030,7 @@ ALTER TABLE ONLY public.usuario
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260709004533'),
 ('20260706234910'),
 ('20260704234942');
 

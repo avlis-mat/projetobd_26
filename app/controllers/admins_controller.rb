@@ -55,12 +55,23 @@ class AdminsController < ApplicationController
   
   def destroy
     ActiveRecord::Base.transaction do
-      usuario = @admin.usuario
-      @admin.destroy!
-      usuario.destroy!
+      usuario = @admin.usuario  # ajuste para cada controller
+      if @admin.destroy
+        usuario.destroy!
+      else
+        raise ActiveRecord::Rollback
+      end
     end
 
-    redirect_to admins_path, notice: "Admin removido com sucesso!"
+    if @admin.errors.any?
+      redirect_to admins_path,
+        alert: @admin.errors.full_messages.to_sentence,
+        status: :see_other
+    else
+      redirect_to admins_path,
+        notice: "Admin removido com sucesso!",
+        status: :see_other
+    end
   end
 
   private

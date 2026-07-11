@@ -8,6 +8,7 @@ class DepartamentosController < ApplicationController
 
   # GET /departamentos/1 or /departamentos/1.json
   def show
+    @materias = @departamento.materias.includes(:turmas)
   end
 
   # GET /departamentos/new

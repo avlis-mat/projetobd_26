@@ -5,10 +5,10 @@ class RespostaController < ApplicationController
   # GET /resposta or /resposta.json
   def index
     @resposta = if current_tipo == :aluno
-      Respostum.includes(:aluno, :formulario, :questao)
+      Respostum.includes(:formulario, :questao, aluno: :usuario)
               .where(idaluno: current_aluno.idusuario)
     else
-      Respostum.includes(:aluno, :formulario, :questao).all
+      Respostum.includes(:formulario, :questao, aluno: :usuario).all
     end
   end
 
